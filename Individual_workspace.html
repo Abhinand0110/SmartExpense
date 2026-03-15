@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartExpense – Workspace</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -12,7 +12,7 @@
       --bg: #f4f5f7; --surface: #ffffff; --surface2: #f9fafb;
       --border: #e5e7eb; --accent: #6366f1; --accent-light: #eef2ff;
       --accent-dark: #4f46e5; --green: #10b981; --green-light: #ecfdf5;
-      --red: #ef4444; --red-light: #fef2f2;
+      --red: #ef4444; --red-light: #fef2f2; --yellow: #f59e0b;
       --text: #111827; --text2: #6b7280; --text3: #9ca3af;
       --radius: 14px; --shadow: 0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
     }
@@ -25,15 +25,10 @@
     .nav-brand { font-weight:700; font-size:1.1rem; color:var(--accent); }
     .nav-right  { display:flex; align-items:center; gap:12px; }
     .nav-user {
-      width:36px; height:36px; border-radius:50%;
-      background:var(--accent); color:#fff; font-weight:600; font-size:.85rem;
-      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      width:36px; height:36px; border-radius:50%; background:var(--accent); color:#fff;
+      font-weight:600; font-size:.85rem; display:flex; align-items:center; justify-content:center; cursor:pointer;
     }
-    .nav-btn {
-      background:none; border:1px solid var(--border); border-radius:8px;
-      padding:6px 14px; font-size:.82rem; font-family:inherit;
-      cursor:pointer; color:var(--text2); transition:all .2s;
-    }
+    .nav-btn { background:none; border:1px solid var(--border); border-radius:8px; padding:6px 14px; font-size:.82rem; font-family:inherit; cursor:pointer; color:var(--text2); transition:all .2s; }
     .nav-btn:hover { background:var(--bg); color:var(--text); }
     .layout { display:flex; min-height:calc(100vh - 60px); }
     aside {
@@ -50,19 +45,10 @@
     .sidebar-item.active { background:var(--accent-light); color:var(--accent); font-weight:600; }
     .sidebar-item .icon  { font-size:1rem; width:18px; text-align:center; }
     main { flex:1; padding:28px 32px; overflow-x:hidden; }
-    .page { display:none; }
-    .page.active { display:block; }
+    .page { display:none; } .page.active { display:block; }
     .page-header { margin-bottom:24px; }
     .page-header h1 { font-size:1.5rem; font-weight:700; letter-spacing:-.3px; }
     .page-header p  { color:var(--text2); font-size:.875rem; margin-top:2px; }
-    .kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
-    .kpi-card { background:var(--surface); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); }
-    .kpi-label { font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--text3); margin-bottom:6px; }
-    .kpi-value { font-size:1.75rem; font-weight:700; letter-spacing:-.5px; font-family:'DM Mono',monospace; }
-    .kpi-value.income  { color:var(--green); }
-    .kpi-value.expense { color:var(--red); }
-    .kpi-value.savings { color:var(--accent); }
-    .kpi-sub { font-size:.78rem; color:var(--text3); margin-top:4px; }
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:24px; }
     .card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px 24px; }
     .card-title { font-size:.9rem; font-weight:600; margin-bottom:18px; display:flex; align-items:center; gap:8px; }
@@ -109,20 +95,61 @@
     .compare-controls { display:flex; gap:12px; align-items:flex-end; margin-bottom:20px; flex-wrap:wrap; }
     .compare-result { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
     .compare-box { border-radius:10px; padding:16px 18px; text-align:center; }
-    .compare-box.inc { background:var(--green-light); }
-    .compare-box.exp { background:var(--red-light); }
-    .compare-box.sav { background:var(--accent-light); }
+    .compare-box.inc { background:var(--green-light); } .compare-box.exp { background:var(--red-light); } .compare-box.sav { background:var(--accent-light); }
     .compare-box .cb-val { font-size:1.3rem; font-weight:700; font-family:'DM Mono',monospace; margin-bottom:4px; }
-    .compare-box.inc .cb-val { color:var(--green); }
-    .compare-box.exp .cb-val { color:var(--red); }
-    .compare-box.sav .cb-val { color:var(--accent); }
+    .compare-box.inc .cb-val { color:var(--green); } .compare-box.exp .cb-val { color:var(--red); } .compare-box.sav .cb-val { color:var(--accent); }
     .compare-box .cb-lbl { font-size:.75rem; font-weight:600; color:var(--text2); }
     .chart-container { position:relative; height:240px; }
     .empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:.875rem; }
     .empty .empty-icon { font-size:2.5rem; margin-bottom:10px; }
     .loading { text-align:center; padding:24px; color:var(--text3); font-size:.875rem; }
-    @media(max-width:900px){ aside{display:none} .kpi-grid{grid-template-columns:1fr 1fr} .grid-2{grid-template-columns:1fr} }
-    @media(max-width:600px){ main{padding:16px} .kpi-grid{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr} }
+ 
+    /* ── DASHBOARD ── */
+    .dash-kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+    .dash-kpi {
+      background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:22px 24px; border-left:4px solid transparent; transition:transform .15s, box-shadow .15s;
+    }
+    .dash-kpi:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(0,0,0,0.09); }
+    .dash-kpi.savings { border-color:var(--accent); }
+    .dash-kpi.income  { border-color:var(--green); }
+    .dash-kpi.expense { border-color:var(--red); }
+    .dash-kpi-label { font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); margin-bottom:8px; }
+    .dash-kpi-val   { font-size:1.9rem; font-weight:700; letter-spacing:-.5px; font-family:'DM Mono',monospace; }
+    .dash-kpi.savings .dash-kpi-val { color:var(--accent); }
+    .dash-kpi.income  .dash-kpi-val { color:var(--green); }
+    .dash-kpi.expense .dash-kpi-val { color:var(--red); }
+    .dash-kpi-sub { font-size:.75rem; color:var(--text3); margin-top:6px; }
+    .filter-bar {
+      background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:14px 28px; display:flex; align-items:center; justify-content:center;
+      gap:20px; flex-wrap:wrap; margin-bottom:20px;
+    }
+    .filter-label { font-size:.78rem; font-weight:600; color:var(--text2); white-space:nowrap; }
+    .filter-select {
+      padding:7px 10px; font-size:.82rem; border-radius:8px; border:1.5px solid var(--border);
+      background:var(--surface2); font-family:inherit; color:var(--text); outline:none; cursor:pointer; transition:border .2s;
+    }
+    .filter-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,.1); }
+    .filter-divider { width:1px; height:26px; background:var(--border); flex-shrink:0; }
+    .filter-group { display:flex; align-items:center; gap:8px; }
+    .custom-wrap { display:none; align-items:center; gap:7px; }
+    .custom-wrap.show { display:flex; }
+    .custom-wrap input[type=date] { padding:6px 10px; font-size:.82rem; border-radius:8px; border:1.5px solid var(--border); background:var(--surface2); font-family:inherit; color:var(--text); outline:none; }
+    .filter-period-tag {
+      font-size:.72rem; color:var(--text3);
+      background:var(--bg); border-radius:6px; padding:4px 12px; font-weight:500; white-space:nowrap;
+    }
+    .dash-charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+    .dash-chart-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+    .dash-chart-title { font-size:.875rem; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .dash-chart-title .cdot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .dash-chart-wrap { position:relative; height:220px; }
+    .dash-table-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
+ 
+    @media(max-width:1024px) { .dash-charts-grid { grid-template-columns:1fr; } }
+    @media(max-width:900px)  { aside{display:none} .dash-kpi-grid{grid-template-columns:1fr 1fr} .grid-2{grid-template-columns:1fr} }
+    @media(max-width:600px)  { main{padding:16px} .dash-kpi-grid{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr} .filter-bar{flex-direction:column;align-items:flex-start} }
   </style>
 </head>
 <body>
@@ -131,7 +158,7 @@
   <span class="nav-brand">SmartExpense</span>
   <div class="nav-right">
     <button class="nav-btn" onclick="location.href='workspace.html'">← Home</button>
-    <div class="nav-user" id="navInitial">U</div>
+    <div class="nav-user" id="navInitial" onclick="location.href='profile.html'" title="Profile">U</div>
   </div>
 </nav>
  
@@ -147,47 +174,99 @@
  
   <main>
  
-    <!-- DASHBOARD -->
+    <!-- ══════════ DASHBOARD ══════════ -->
     <div class="page active" id="page-dashboard">
-      <div class="page-header"><h1>Dashboard</h1><p>Your financial overview at a glance</p></div>
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-label">Total Income</div>
-          <div class="kpi-value income" id="kpi-income">₹0</div>
-          <div class="kpi-sub" id="kpi-income-sub">—</div>
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p id="dash-subtitle">Your financial overview at a glance</p>
+      </div>
+ 
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi savings">
+          <div class="dash-kpi-label">Total Savings</div>
+          <div class="dash-kpi-val" id="d-savings">—</div>
+          <div class="dash-kpi-sub" id="d-savings-sub">Income − Expenses</div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Total Expenses</div>
-          <div class="kpi-value expense" id="kpi-expense">₹0</div>
-          <div class="kpi-sub" id="kpi-expense-sub">—</div>
+        <div class="dash-kpi income">
+          <div class="dash-kpi-label">Total Income</div>
+          <div class="dash-kpi-val" id="d-income">—</div>
+          <div class="dash-kpi-sub" id="d-income-sub">—</div>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Net Savings</div>
-          <div class="kpi-value savings" id="kpi-savings">₹0</div>
-          <div class="kpi-sub" id="kpi-savings-sub">Income minus expenses</div>
+        <div class="dash-kpi expense">
+          <div class="dash-kpi-label">Total Expense</div>
+          <div class="dash-kpi-val" id="d-expense">—</div>
+          <div class="dash-kpi-sub" id="d-expense-sub">—</div>
         </div>
       </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title"><span class="dot"></span> Monthly Overview</div>
-          <div class="chart-container"><canvas id="barChart"></canvas></div>
+ 
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Period</span>
+          <select class="filter-select" id="f-period" onchange="onPeriodChange()">
+            <option value="all_time">All Time</option>
+            <option value="this_year" selected>This Year</option>
+            <option value="this_month">This Month</option>
+            <option value="last_month">Last Month</option>
+            <option value="last7">Last 7 Days</option>
+            <option value="today">Today</option>
+            <option value="custom">Custom Range</option>
+          </select>
         </div>
-        <div class="card">
-          <div class="card-title"><span class="dot" style="background:var(--red)"></span> Expense by Category</div>
-          <div class="chart-container"><canvas id="pieChart"></canvas></div>
+        <div class="custom-wrap" id="custom-wrap">
+          <span class="filter-label">From</span>
+          <input type="date" id="f-start" onchange="loadDashboard()"/>
+          <span class="filter-label">To</span>
+          <input type="date" id="f-end" onchange="loadDashboard()"/>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <span class="filter-label">Category</span>
+          <select class="filter-select" id="f-category" onchange="loadDashboard()">
+            <option value="all">All Categories</option>
+            <option>Food &amp; Dining</option><option>Transport</option><option>Shopping</option>
+            <option>Entertainment</option><option>Healthcare</option><option>Education</option>
+            <option>Utilities</option><option>Rent</option><option>Travel</option><option>Other</option>
+          </select>
+        </div>
+        <!-- hidden type filter kept for JS logic, not shown to user -->
+        <input type="hidden" id="f-type" value="all"/>
+        <span class="filter-period-tag" id="f-period-tag">—</span>
+      </div>
+ 
+      <!-- 4 Charts with DYNAMIC titles -->
+      <div class="dash-charts-grid">
+        <div class="dash-chart-card">
+          <div class="dash-chart-title"><span class="cdot" style="background:var(--accent)"></span><span id="title-pie">Expense by Category</span></div>
+          <div class="dash-chart-wrap"><canvas id="c-pie"></canvas></div>
+        </div>
+        <div class="dash-chart-card">
+          <div class="dash-chart-title"><span class="cdot" style="background:var(--red)"></span><span id="title-line">Expense Trend</span></div>
+          <div class="dash-chart-wrap"><canvas id="c-line"></canvas></div>
+        </div>
+        <div class="dash-chart-card">
+          <div class="dash-chart-title"><span class="cdot" style="background:var(--green)"></span><span id="title-bar">Income vs Expense</span></div>
+          <div class="dash-chart-wrap"><canvas id="c-bar"></canvas></div>
+        </div>
+        <div class="dash-chart-card">
+          <div class="dash-chart-title"><span class="cdot" style="background:var(--yellow)"></span><span id="title-hbar">Top Spending Categories</span></div>
+          <div class="dash-chart-wrap"><canvas id="c-hbar"></canvas></div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--green)"></span> Recent Transactions</div>
-        <div class="table-wrap" id="dashboard-recent"><div class="loading">Loading...</div></div>
+ 
+      <div class="dash-table-card">
+        <div class="dash-chart-title" style="margin-bottom:14px">
+          <span class="cdot" style="background:var(--green)"></span>
+          <span id="title-recent">Recent Transactions</span>
+        </div>
+        <div class="table-wrap" id="d-recent"><div class="loading">Loading...</div></div>
       </div>
     </div>
  
-    <!-- ADD INCOME -->
+    <!-- ══════════ ADD INCOME ══════════ -->
     <div class="page" id="page-income">
       <div class="page-header"><h1>Add Income</h1><p>Record a new income entry</p></div>
       <div class="card" style="max-width:560px">
-        <div class="card-title"><span class="dot" style="background:var(--green)"></span> Income Details</div>
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>Income Details</div>
         <div class="form-grid">
           <div class="form-group">
             <label>Source</label>
@@ -201,74 +280,53 @@
             <label>Amount (₹)</label>
             <input type="number" id="inc-amount" placeholder="0.00" min="0"/>
           </div>
-          <div class="form-group full">
-            <label>Date</label>
-            <input type="date" id="inc-date"/>
-          </div>
+          <div class="form-group full"><label>Date</label><input type="date" id="inc-date"/></div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-green" onclick="addIncome()">+ Add Income</button>
-        </div>
+        <div class="btn-row"><button class="btn btn-green" onclick="addIncome()">+ Add Income</button></div>
       </div>
       <div class="card" style="margin-top:20px">
-        <div class="card-title"><span class="dot" style="background:var(--green)"></span> Income History</div>
+        <div class="card-title"><span class="dot" style="background:var(--green)"></span>Income History</div>
         <div class="table-wrap" id="income-table-wrap"><div class="loading">Loading...</div></div>
       </div>
     </div>
  
-    <!-- ADD EXPENSE -->
+    <!-- ══════════ ADD EXPENSE ══════════ -->
     <div class="page" id="page-expense">
       <div class="page-header"><h1>Add Expense</h1><p>Record a new expense entry</p></div>
       <div class="card" style="max-width:560px">
-        <div class="card-title"><span class="dot" style="background:var(--red)"></span> Expense Details</div>
+        <div class="card-title"><span class="dot" style="background:var(--red)"></span>Expense Details</div>
         <div class="form-grid">
           <div class="form-group">
             <label>Category</label>
             <select id="exp-category">
               <option value="">Select category</option>
-              <option>Food & Dining</option><option>Transport</option><option>Shopping</option>
+              <option>Food &amp; Dining</option><option>Transport</option><option>Shopping</option>
               <option>Entertainment</option><option>Healthcare</option><option>Education</option>
               <option>Utilities</option><option>Rent</option><option>Travel</option><option>Other</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Amount (₹)</label>
-            <input type="number" id="exp-amount" placeholder="0.00" min="0"/>
-          </div>
-          <div class="form-group">
-            <label>Title / Description</label>
-            <input type="text" id="exp-title" placeholder="e.g. Grocery at DMart"/>
-          </div>
-          <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="exp-date"/>
-          </div>
+          <div class="form-group"><label>Amount (₹)</label><input type="number" id="exp-amount" placeholder="0.00" min="0"/></div>
+          <div class="form-group"><label>Title / Description</label><input type="text" id="exp-title" placeholder="e.g. Grocery at DMart"/></div>
+          <div class="form-group"><label>Date</label><input type="date" id="exp-date"/></div>
         </div>
-        <div class="btn-row">
-          <button class="btn btn-red" onclick="addExpense()">+ Add Expense</button>
-        </div>
+        <div class="btn-row"><button class="btn btn-red" onclick="addExpense()">+ Add Expense</button></div>
       </div>
       <div class="card" style="margin-top:20px">
-        <div class="card-title"><span class="dot" style="background:var(--red)"></span> Expense History</div>
+        <div class="card-title"><span class="dot" style="background:var(--red)"></span>Expense History</div>
         <div class="table-wrap" id="expense-table-wrap"><div class="loading">Loading...</div></div>
       </div>
     </div>
  
-    <!-- TRANSACTIONS -->
+    <!-- ══════════ TRANSACTIONS ══════════ -->
     <div class="page" id="page-transactions">
       <div class="page-header"><h1>All Transactions</h1><p>Combined income and expense history</p></div>
       <div class="card">
         <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end">
-          <div class="form-group" style="min-width:150px">
-            <label>Filter by Month</label>
-            <input type="month" id="filter-month" onchange="renderTransactions()"/>
-          </div>
+          <div class="form-group" style="min-width:150px"><label>Filter by Month</label><input type="month" id="filter-month" onchange="renderTransactions()"/></div>
           <div class="form-group" style="min-width:130px">
             <label>Type</label>
             <select id="filter-type" onchange="renderTransactions()">
-              <option value="all">All</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
+              <option value="all">All</option><option value="income">Income</option><option value="expense">Expense</option>
             </select>
           </div>
         </div>
@@ -276,16 +334,13 @@
       </div>
     </div>
  
-    <!-- COMPARE -->
+    <!-- ══════════ COMPARE ══════════ -->
     <div class="page" id="page-compare">
       <div class="page-header"><h1>Compare</h1><p>Analyse income vs expense for any period</p></div>
       <div class="card" style="margin-bottom:20px">
-        <div class="card-title"><span class="dot"></span> Select Month</div>
+        <div class="card-title"><span class="dot"></span>Select Month</div>
         <div class="compare-controls">
-          <div class="form-group">
-            <label>Month</label>
-            <input type="month" id="cmp-month"/>
-          </div>
+          <div class="form-group"><label>Month</label><input type="month" id="cmp-month"/></div>
           <button class="btn btn-primary" onclick="runCompare()">Compare →</button>
         </div>
         <div class="compare-result" id="cmp-result" style="display:none">
@@ -296,11 +351,11 @@
       </div>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title"><span class="dot"></span> All Months – Income vs Expense</div>
+          <div class="card-title"><span class="dot"></span>All Months – Income vs Expense</div>
           <div class="chart-container"><canvas id="cmpBarChart"></canvas></div>
         </div>
         <div class="card">
-          <div class="card-title"><span class="dot" style="background:var(--red)"></span> Category Breakdown</div>
+          <div class="card-title"><span class="dot" style="background:var(--red)"></span>Category Breakdown</div>
           <div class="chart-container"><canvas id="cmpPieChart"></canvas></div>
         </div>
       </div>
@@ -308,7 +363,6 @@
  
   </main>
 </div>
- 
 <div class="toast" id="toast"></div>
  
 <script>
@@ -318,246 +372,361 @@
  
   if (USER) document.getElementById("navInitial").textContent = USER.name?.[0]?.toUpperCase() || "U";
  
-  const today = new Date().toISOString().split("T")[0];
+  const today     = new Date().toISOString().split("T")[0];
   const thisMonth = today.slice(0,7);
-  document.getElementById("inc-date").value = today;
-  document.getElementById("exp-date").value = today;
-  document.getElementById("cmp-month").value = thisMonth;
+  const thisYear  = today.slice(0,4);
+ 
+  document.getElementById("inc-date").value     = today;
+  document.getElementById("exp-date").value     = today;
+  document.getElementById("cmp-month").value    = thisMonth;
   document.getElementById("filter-month").value = thisMonth;
+  document.getElementById("f-start").value      = thisYear + "-01-01";
+  document.getElementById("f-end").value        = today;
  
-  // ── helpers ──
   const fmt = n => "₹" + Number(n).toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:0});
- 
   function showToast(msg, type="success") {
-    const t = document.getElementById("toast");
-    t.textContent = msg; t.className = `toast ${type} show`;
-    setTimeout(()=>t.className="toast", 3000);
+    const t=document.getElementById("toast"); t.textContent=msg; t.className=`toast ${type} show`;
+    setTimeout(()=>t.className="toast",3000);
   }
- 
   function emptyState(msg="No records found") {
     return `<div class="empty"><div class="empty-icon">📭</div>${msg}</div>`;
   }
  
-  // ── sidebar ──
   function showPage(name, el) {
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.querySelectorAll(".sidebar-item").forEach(b=>b.classList.remove("active"));
-    document.getElementById("page-"+name).classList.add("active");
-    el.classList.add("active");
-    if (name==="dashboard")    loadAll().then(refreshDashboard);
+    document.getElementById("page-"+name).classList.add("active"); el.classList.add("active");
+    if (name==="dashboard")    loadDashboard();
     if (name==="income")       loadIncomes().then(renderIncomeTable);
     if (name==="expense")      loadExpenses().then(renderExpenseTable);
     if (name==="transactions") loadAll().then(renderTransactions);
     if (name==="compare")      loadAll().then(renderCompareCharts);
   }
  
-  // ── fetch from Flask ──
+  // ── Period → granularity + date range ──
+  // ✅ KEY FIX: never use "today" as end for open-ended periods.
+  // Some entries may have future dates (e.g. April salary entered early).
+  // Use "2099-12-31" so ALL data is always included.
+  const FAR_FUTURE = "2099-12-31";
+ 
+  function getPeriodConfig() {
+    const period = document.getElementById("f-period").value;
+    const now    = new Date();
+    let start, end, label = "", granularity = "monthly";
+ 
+    if (period === "all_time") {
+      start = "2000-01-01"; end = FAR_FUTURE; label = "All Time"; granularity = "monthly";
+ 
+    } else if (period === "today") {
+      start = today; end = today; label = "Today"; granularity = "daily";
+ 
+    } else if (period === "last7") {
+      const d = new Date(); d.setDate(d.getDate()-6);
+      start = d.toISOString().split("T")[0]; end = today;
+      label = "Last 7 Days"; granularity = "daily";
+ 
+    } else if (period === "this_month") {
+      const mo = String(now.getMonth()+1).padStart(2,"0");
+      start = thisYear + "-" + mo + "-01";
+      // Last day of current month
+      const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0);
+      end = lastDay.toISOString().split("T")[0];
+      label = now.toLocaleString("default",{month:"long",year:"numeric"});
+      granularity = "daily";
+ 
+    } else if (period === "last_month") {
+      const d = new Date(now.getFullYear(), now.getMonth()-1, 1);
+      start = d.toISOString().split("T")[0];
+      const e = new Date(now.getFullYear(), now.getMonth(), 0);
+      end   = e.toISOString().split("T")[0];
+      label = d.toLocaleString("default",{month:"long",year:"numeric"});
+      granularity = "daily";
+ 
+    } else if (period === "this_year") {
+      start = thisYear + "-01-01";
+      end   = thisYear + "-12-31"; // ✅ full year, includes future-dated entries
+      label = "Year " + thisYear;
+      granularity = "monthly";
+ 
+    } else if (period === "custom") {
+      start = document.getElementById("f-start").value || thisYear+"-01-01";
+      end   = document.getElementById("f-end").value   || FAR_FUTURE;
+      label = start + " → " + end;
+      const diffDays = (new Date(end) - new Date(start)) / (1000*60*60*24);
+      granularity = diffDays <= 31 ? "daily" : "monthly";
+    }
+ 
+    return { start, end, label, granularity };
+  }
+ 
+  function onPeriodChange() {
+    const isCustom = document.getElementById("f-period").value === "custom";
+    document.getElementById("custom-wrap").classList.toggle("show", isCustom);
+    if (!isCustom) loadDashboard();
+  }
+ 
+      // ── Dynamic chart titles based on granularity ──
+      function updateChartTitles(granularity, label, cat, type) {
+        const g = granularity === "daily" ? "Daily" : "Monthly";
+        // Pie title: changes based on type
+        document.getElementById("title-pie").textContent  =
+          type === "income" ? "Income by Source" : "Expense by Category";
+        // Line title: shows category name if filtered
+        const catLabel = (cat && cat !== "all") ? cat + " Expense Trend" : `${g} Expense Trend`;
+        document.getElementById("title-line").textContent  = catLabel;
+        document.getElementById("title-bar").textContent   = `${g} Income vs Expense`;
+        document.getElementById("title-hbar").textContent  = "Top Spending Categories";
+        document.getElementById("title-recent").textContent = "Recent Transactions";
+      }
+ 
+  // ═══════════════════════════════════════
+  // ⚡ DASHBOARD
+  // ═══════════════════════════════════════
+  let pieInst, lineInst, barInst, hbarInst;
+  const COLORS = ["#6366f1","#10b981","#ef4444","#f59e0b","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316","#84cc16"];
+ 
+  async function loadDashboard() {
+    if (!USER) return;
+ 
+    const { start, end, label, granularity } = getPeriodConfig();
+    const cat  = document.getElementById("f-category").value;
+    const type = document.getElementById("f-type").value;
+ 
+    document.getElementById("f-period-tag").textContent  = label;
+    document.getElementById("dash-subtitle").textContent = `Showing: ${start} → ${end}`;
+    updateChartTitles(granularity, label, cat, type);
+ 
+    try {
+      const url = `${BASE}/dashboard-data?user_id=${USER.id}&start_date=${start}&end_date=${end}&category=${encodeURIComponent(cat)}&granularity=${granularity}`;
+      const res  = await fetch(url);
+      if (!res.ok) { const e=await res.json(); throw new Error(e.message||"Server error"); }
+      const data = await res.json();
+ 
+      // KPIs
+      const savings = data.total_income - data.total_expense;
+      document.getElementById("d-savings").textContent      = fmt(savings);
+      document.getElementById("d-income").textContent       = fmt(data.total_income);
+      document.getElementById("d-expense").textContent      = fmt(data.total_expense);
+      document.getElementById("d-savings-sub").textContent  = savings >= 0 ? "You're saving well 🎉" : "Overspending ⚠️";
+      document.getElementById("d-income-sub").textContent   = data.income_vs_expense.length > 0
+        ? data.income_vs_expense.length + (granularity==="daily" ? " day(s) with income" : " month(s) recorded")
+        : "No income in period";
+      document.getElementById("d-expense-sub").textContent  = data.category_expense.length > 0
+        ? data.category_expense.length + " categor" + (data.category_expense.length===1?"y":"ies")
+        : "No expenses in period";
+ 
+      const showInc = type === "all" || type === "income";
+      const showExp = type === "all" || type === "expense";
+ 
+      // ✅ Pie: show income sources when "Income only", else expense categories
+      if (type === "income") {
+        drawPie(data.income_by_source || []);
+      } else {
+        drawPie(showExp ? data.category_expense : []);
+      }
+ 
+      drawLine(showExp ? data.monthly_expense : [], granularity);
+      drawBar(data.income_vs_expense, showInc, showExp, granularity);
+      drawHBar(showExp ? data.top_categories : []);
+      renderRecentTable(data.recent, type);
+ 
+    } catch(e) {
+      console.error("Dashboard error:", e);
+      showToast("Dashboard error: " + e.message, "error");
+    }
+  }
+ 
+  const cOpts = {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ font:{family:"DM Sans",size:11}, boxWidth:10, padding:10 } } }
+  };
+  function dc(inst) { if (inst) { try { inst.destroy(); } catch(e){} } return null; }
+ 
+  function drawPie(data) {
+    pieInst = dc(pieInst);
+    const labels = data.map(d=>d.category), vals = data.map(d=>d.amount);
+    pieInst = new Chart(document.getElementById("c-pie").getContext("2d"), {
+      type:"doughnut",
+      data:{
+        labels: labels.length?labels:["No expenses"],
+        datasets:[{ data:vals.length?vals:[1], backgroundColor:vals.length?COLORS.slice(0,vals.length):["#e5e7eb"], borderWidth:2, borderColor:"#fff" }]
+      },
+      options:{
+        ...cOpts, cutout:"60%",
+        plugins:{
+          legend:{ position:"right", labels:{ font:{family:"DM Sans",size:11}, boxWidth:10, padding:10 } },
+          tooltip:{ callbacks:{ label: ctx => {
+            const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+            const pct   = total>0 ? ((ctx.parsed/total)*100).toFixed(1) : 0;
+            return ` ${ctx.label}: ${fmt(ctx.parsed)} (${pct}%)`;
+          }}}
+        }
+      }
+    });
+  }
+ 
+  function drawLine(data, granularity) {
+    lineInst = dc(lineInst);
+    lineInst = new Chart(document.getElementById("c-line").getContext("2d"), {
+      type:"line",
+      data:{
+        labels: data.length?data.map(d=>d.month):["No data"],
+        datasets:[{
+          label:"Expense", data:data.length?data.map(d=>d.amount):[0],
+          borderColor:"#ef4444", backgroundColor:"rgba(239,68,68,0.08)",
+          borderWidth:2.5, pointRadius: granularity==="daily" ? 4 : 5,
+          pointBackgroundColor:"#ef4444", pointHoverRadius:7, fill:true, tension:0.35
+        }]
+      },
+      options:{
+        ...cOpts,
+        plugins:{ legend:{display:false} },
+        scales:{
+          y:{ beginAtZero:true, grid:{color:"#f3f4f6"}, ticks:{callback:v=>"₹"+v.toLocaleString("en-IN"),font:{size:11}} },
+          x:{ grid:{display:false}, ticks:{ font:{size:11}, maxTicksLimit: granularity==="daily" ? 7 : 12, maxRotation:30 } }
+        }
+      }
+    });
+  }
+ 
+  function drawBar(data, showInc, showExp, granularity) {
+    barInst = dc(barInst);
+    const datasets = [];
+    if (showInc) datasets.push({ label:"Income",  data:data.length?data.map(d=>d.income):[0],  backgroundColor:"#10b981cc", borderRadius:5 });
+    if (showExp) datasets.push({ label:"Expense", data:data.length?data.map(d=>d.expense):[0], backgroundColor:"#ef4444cc", borderRadius:5 });
+    barInst = new Chart(document.getElementById("c-bar").getContext("2d"), {
+      type:"bar",
+      data:{ labels:data.length?data.map(d=>d.month):["No data"], datasets },
+      options:{
+        ...cOpts,
+        scales:{
+          y:{ beginAtZero:true, grid:{color:"#f3f4f6"}, ticks:{callback:v=>"₹"+v.toLocaleString("en-IN"),font:{size:11}} },
+          x:{ grid:{display:false}, ticks:{ font:{size:11}, maxTicksLimit: granularity==="daily" ? 7 : 12, maxRotation:30 } }
+        }
+      }
+    });
+  }
+ 
+  function drawHBar(data) {
+    hbarInst = dc(hbarInst);
+    hbarInst = new Chart(document.getElementById("c-hbar").getContext("2d"), {
+      type:"bar",
+      data:{
+        labels: data.length?data.map(d=>d.category):["No data"],
+        datasets:[{ label:"Amount", data:data.length?data.map(d=>d.amount):[0], backgroundColor:data.length?COLORS.slice(0,data.length):["#e5e7eb"], borderRadius:5 }]
+      },
+      options:{
+        ...cOpts, indexAxis:"y",
+        plugins:{ ...cOpts.plugins, legend:{display:false} },
+        scales:{
+          x:{ beginAtZero:true, grid:{color:"#f3f4f6"}, ticks:{callback:v=>"₹"+v.toLocaleString("en-IN"),font:{size:11}} },
+          y:{ grid:{display:false}, ticks:{font:{size:11}} }
+        }
+      }
+    });
+  }
+ 
+  function renderRecentTable(rows, typeFilter) {
+    let filtered = (rows||[]).filter(r => typeFilter==="all" || r.type===typeFilter);
+    if (!filtered.length) { document.getElementById("d-recent").innerHTML=emptyState("No transactions in this period"); return; }
+    document.getElementById("d-recent").innerHTML = `
+      <table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>
+      ${filtered.map(r=>`<tr>
+        <td>${r.tx_date}</td>
+        <td>${r.type==="income"?`<span class="badge badge-income">Income</span>`:`<span class="badge badge-expense">Expense</span>`}</td>
+        <td style="color:var(--text2)">${r.type==="income"?r.title:`${r.category}${r.title?" – "+r.title:""}`}</td>
+        <td class="${r.type==="income"?"amount-income":"amount-expense"}">${r.type==="income"?"+":"−"}${fmt(r.amount)}</td>
+      </tr>`).join("")}
+      </tbody></table>`;
+  }
+ 
+  // ═══════════════════════════════════════
+  // INCOME / EXPENSE
+  // ═══════════════════════════════════════
   async function loadIncomes() {
     if (!USER) return;
     try { const r=await fetch(`${BASE}/get-income/${USER.id}`); incomes=await r.json(); }
     catch { showToast("Could not load income","error"); }
   }
- 
   async function loadExpenses() {
     if (!USER) return;
     try { const r=await fetch(`${BASE}/get-expenses/${USER.id}`); expenses=await r.json(); }
     catch { showToast("Could not load expenses","error"); }
   }
- 
   async function loadAll() { await Promise.all([loadIncomes(), loadExpenses()]); }
  
-  // ── ADD INCOME → saves to MySQL income table ──
   async function addIncome() {
     if (!USER) return showToast("Please log in first","error");
-    const source = document.getElementById("inc-source").value;
-    const amount = parseFloat(document.getElementById("inc-amount").value);
-    const date   = document.getElementById("inc-date").value;
+    const source=document.getElementById("inc-source").value;
+    const amount=parseFloat(document.getElementById("inc-amount").value);
+    const date  =document.getElementById("inc-date").value;
     if (!source) return showToast("Please select a source","error");
     if (!amount||amount<=0) return showToast("Enter a valid amount","error");
-    if (!date) return showToast("Please select a date","error");
+    if (!date)   return showToast("Please select a date","error");
     try {
-      const res = await fetch(`${BASE}/add-income`,{
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({user_id:USER.id, source, amount, income_date:date})
-      });
-      const data = await res.json();
-      if (!res.ok) return showToast(data.message||"Error","error");
-      showToast("✅ Income saved to database!");
-      document.getElementById("inc-source").value="";
-      document.getElementById("inc-amount").value="";
-      document.getElementById("inc-date").value=today;
-      await loadIncomes(); renderIncomeTable();
+      const res=await fetch(`${BASE}/add-income`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:USER.id,source,amount,income_date:date})});
+      const data=await res.json();
+      if(!res.ok) return showToast(data.message||"Error","error");
+      showToast("✅ Income saved!");
+      document.getElementById("inc-source").value=""; document.getElementById("inc-amount").value=""; document.getElementById("inc-date").value=today;
+      await loadIncomes(); renderIncomeTable(); loadDashboard();
     } catch { showToast("Server not reachable","error"); }
   }
  
-  // ── ADD EXPENSE → saves to MySQL expenses table ──
   async function addExpense() {
     if (!USER) return showToast("Please log in first","error");
-    const category = document.getElementById("exp-category").value;
-    const amount   = parseFloat(document.getElementById("exp-amount").value);
-    const title    = document.getElementById("exp-title").value.trim();
-    const date     = document.getElementById("exp-date").value;
+    const category=document.getElementById("exp-category").value;
+    const amount  =parseFloat(document.getElementById("exp-amount").value);
+    const title   =document.getElementById("exp-title").value.trim();
+    const date    =document.getElementById("exp-date").value;
     if (!category) return showToast("Please select a category","error");
     if (!amount||amount<=0) return showToast("Enter a valid amount","error");
-    if (!date) return showToast("Please select a date","error");
+    if (!date)    return showToast("Please select a date","error");
     try {
-      const res = await fetch(`${BASE}/add-expense`,{
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({user_id:USER.id, title, category, amount, expense_date:date})
-      });
-      const data = await res.json();
-      if (!res.ok) return showToast(data.message||"Error","error");
-      showToast("✅ Expense saved to database!");
-      document.getElementById("exp-category").value="";
-      document.getElementById("exp-amount").value="";
-      document.getElementById("exp-title").value="";
-      document.getElementById("exp-date").value=today;
-      await loadExpenses(); renderExpenseTable();
+      const res=await fetch(`${BASE}/add-expense`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:USER.id,title,category,amount,expense_date:date})});
+      const data=await res.json();
+      if(!res.ok) return showToast(data.message||"Error","error");
+      showToast("✅ Expense saved!");
+      document.getElementById("exp-category").value=""; document.getElementById("exp-amount").value=""; document.getElementById("exp-title").value=""; document.getElementById("exp-date").value=today;
+      await loadExpenses(); renderExpenseTable(); loadDashboard();
     } catch { showToast("Server not reachable","error"); }
   }
  
-  // ── DELETE ──
-  async function deleteIncome(id) {
-    await fetch(`${BASE}/delete-income/${id}`,{method:"DELETE"});
-    await loadIncomes(); renderIncomeTable();
-    showToast("Deleted","info");
-  }
-  async function deleteExpense(id) {
-    await fetch(`${BASE}/delete-expense/${id}`,{method:"DELETE"});
-    await loadExpenses(); renderExpenseTable();
-    showToast("Deleted","info");
-  }
+  async function deleteIncome(id)  { await fetch(`${BASE}/delete-income/${id}`,{method:"DELETE"});  await loadIncomes();  renderIncomeTable();  loadDashboard(); showToast("Deleted","info"); }
+  async function deleteExpense(id) { await fetch(`${BASE}/delete-expense/${id}`,{method:"DELETE"}); await loadExpenses(); renderExpenseTable(); loadDashboard(); showToast("Deleted","info"); }
  
-  // ── TABLE RENDERERS ──
   function renderIncomeTable() {
-    if (!incomes.length){document.getElementById("income-table-wrap").innerHTML=emptyState("No income recorded yet");return;}
-    document.getElementById("income-table-wrap").innerHTML=`
-      <table><thead><tr><th>Date</th><th>Source</th><th>Amount</th><th></th></tr></thead><tbody>
-      ${incomes.map(r=>`<tr>
-        <td>${r.income_date}</td>
-        <td><span class="badge badge-income">Income</span> ${r.source}</td>
-        <td class="amount-income">+${fmt(r.amount)}</td>
-        <td><button onclick="deleteIncome(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td>
-      </tr>`).join("")}
-      </tbody></table>`;
+    if(!incomes.length){document.getElementById("income-table-wrap").innerHTML=emptyState("No income recorded yet");return;}
+    document.getElementById("income-table-wrap").innerHTML=`<table><thead><tr><th>Date</th><th>Source</th><th>Amount</th><th></th></tr></thead><tbody>
+    ${incomes.map(r=>`<tr><td>${r.income_date}</td><td><span class="badge badge-income">Income</span> ${r.source}</td><td class="amount-income">+${fmt(r.amount)}</td><td><button onclick="deleteIncome(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td></tr>`).join("")}
+    </tbody></table>`;
   }
  
   function renderExpenseTable() {
-    if (!expenses.length){document.getElementById("expense-table-wrap").innerHTML=emptyState("No expenses recorded yet");return;}
-    document.getElementById("expense-table-wrap").innerHTML=`
-      <table><thead><tr><th>Date</th><th>Category</th><th>Title</th><th>Amount</th><th></th></tr></thead><tbody>
-      ${expenses.map(r=>`<tr>
-        <td>${r.expense_date}</td>
-        <td><span class="badge badge-expense">Expense</span> ${r.category}</td>
-        <td style="color:var(--text2)">${r.title||"—"}</td>
-        <td class="amount-expense">−${fmt(r.amount)}</td>
-        <td><button onclick="deleteExpense(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td>
-      </tr>`).join("")}
-      </tbody></table>`;
+    if(!expenses.length){document.getElementById("expense-table-wrap").innerHTML=emptyState("No expenses recorded yet");return;}
+    document.getElementById("expense-table-wrap").innerHTML=`<table><thead><tr><th>Date</th><th>Category</th><th>Title</th><th>Amount</th><th></th></tr></thead><tbody>
+    ${expenses.map(r=>`<tr><td>${r.expense_date}</td><td><span class="badge badge-expense">Expense</span> ${r.category}</td><td style="color:var(--text2)">${r.title||"—"}</td><td class="amount-expense">−${fmt(r.amount)}</td><td><button onclick="deleteExpense(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td></tr>`).join("")}
+    </tbody></table>`;
   }
  
   function renderTransactions() {
-    const fm=document.getElementById("filter-month").value;
-    const ft=document.getElementById("filter-type").value;
-    let all=[
-      ...incomes.map(r=>({...r,_type:"income",_date:r.income_date})),
-      ...expenses.map(r=>({...r,_type:"expense",_date:r.expense_date}))
-    ].sort((a,b)=>b._date.localeCompare(a._date));
+    const fm=document.getElementById("filter-month").value, ft=document.getElementById("filter-type").value;
+    let all=[...incomes.map(r=>({...r,_type:"income",_date:r.income_date})),...expenses.map(r=>({...r,_type:"expense",_date:r.expense_date}))].sort((a,b)=>b._date.localeCompare(a._date));
     if(fm) all=all.filter(r=>r._date&&r._date.startsWith(fm));
     if(ft!=="all") all=all.filter(r=>r._type===ft);
     if(!all.length){document.getElementById("all-transactions").innerHTML=emptyState();return;}
-    document.getElementById("all-transactions").innerHTML=`
-      <table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>
-      ${all.map(r=>`<tr>
-        <td>${r._date}</td>
-        <td>${r._type==="income"?`<span class="badge badge-income">Income</span>`:`<span class="badge badge-expense">Expense</span>`}</td>
-        <td style="color:var(--text2)">${r._type==="income"?r.source:`${r.category}${r.title?" – "+r.title:""}`}</td>
-        <td class="${r._type==="income"?"amount-income":"amount-expense"}">${r._type==="income"?"+":"−"}${fmt(r.amount)}</td>
-      </tr>`).join("")}
-      </tbody></table>`;
+    document.getElementById("all-transactions").innerHTML=`<table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>
+    ${all.map(r=>`<tr><td>${r._date}</td><td>${r._type==="income"?`<span class="badge badge-income">Income</span>`:`<span class="badge badge-expense">Expense</span>`}</td><td style="color:var(--text2)">${r._type==="income"?r.source:`${r.category}${r.title?" – "+r.title:""}`}</td><td class="${r._type==="income"?"amount-income":"amount-expense"}">${r._type==="income"?"+":"−"}${fmt(r.amount)}</td></tr>`).join("")}
+    </tbody></table>`;
   }
  
-  // ── DASHBOARD ──
-  let barInst, pieInst;
- 
-  function refreshDashboard() {
-    const totalInc=incomes.reduce((s,r)=>s+parseFloat(r.amount),0);
-    const totalExp=expenses.reduce((s,r)=>s+parseFloat(r.amount),0);
-    const savings=totalInc-totalExp;
-    document.getElementById("kpi-income").textContent=fmt(totalInc);
-    document.getElementById("kpi-expense").textContent=fmt(totalExp);
-    document.getElementById("kpi-savings").textContent=fmt(savings);
-    document.getElementById("kpi-income-sub").textContent=`${incomes.length} entr${incomes.length===1?"y":"ies"}`;
-    document.getElementById("kpi-expense-sub").textContent=`${expenses.length} entr${expenses.length===1?"y":"ies"}`;
-    document.getElementById("kpi-savings-sub").textContent=savings>=0?"You're saving well 🎉":"Expenses exceed income ⚠️";
-    const recent=[
-      ...incomes.map(r=>({...r,_type:"income",_date:r.income_date})),
-      ...expenses.map(r=>({...r,_type:"expense",_date:r.expense_date}))
-    ].sort((a,b)=>b._date.localeCompare(a._date)).slice(0,5);
-    if(!recent.length){
-      document.getElementById("dashboard-recent").innerHTML=emptyState("No transactions yet. Add income or expenses to get started.");
-    } else {
-      document.getElementById("dashboard-recent").innerHTML=`
-        <table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr></thead><tbody>
-        ${recent.map(r=>`<tr>
-          <td>${r._date}</td>
-          <td>${r._type==="income"?`<span class="badge badge-income">Income</span>`:`<span class="badge badge-expense">Expense</span>`}</td>
-          <td style="color:var(--text2)">${r._type==="income"?r.source:`${r.category}${r.title?" – "+r.title:""}`}</td>
-          <td class="${r._type==="income"?"amount-income":"amount-expense"}">${r._type==="income"?"+":"−"}${fmt(r.amount)}</td>
-        </tr>`).join("")}
-        </tbody></table>`;
-    }
-    drawBarChart(); drawPieChart();
-  }
- 
-  function getMonthlyData() {
-    const mi={},me={};
-    incomes.forEach(r=>{const m=r.income_date.slice(0,7); mi[m]=(mi[m]||0)+parseFloat(r.amount);});
-    expenses.forEach(r=>{const m=r.expense_date.slice(0,7); me[m]=(me[m]||0)+parseFloat(r.amount);});
-    const months=[...new Set([...Object.keys(mi),...Object.keys(me)])].sort();
-    return{labels:months,incData:months.map(m=>mi[m]||0),expData:months.map(m=>me[m]||0)};
-  }
- 
-  const COLORS=["#6366f1","#10b981","#ef4444","#f59e0b","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316","#84cc16"];
- 
-  function drawBarChart(){
-    const{labels,incData,expData}=getMonthlyData();
-    const ctx=document.getElementById("barChart").getContext("2d");
-    if(barInst) barInst.destroy();
-    barInst=new Chart(ctx,{type:"bar",data:{labels:labels.length?labels:["No data"],datasets:[
-      {label:"Income",data:incData.length?incData:[0],backgroundColor:"#10b981cc",borderRadius:6},
-      {label:"Expense",data:expData.length?expData:[0],backgroundColor:"#ef4444cc",borderRadius:6}
-    ]},options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"top",labels:{font:{family:"DM Sans"},boxWidth:12}}},
-      scales:{y:{beginAtZero:true,grid:{color:"#f3f4f6"},ticks:{callback:v=>"₹"+v.toLocaleString("en-IN")}},x:{grid:{display:false}}}}});
-  }
- 
-  function drawPieChart(){
-    const cats={};
-    expenses.forEach(r=>{cats[r.category]=(cats[r.category]||0)+parseFloat(r.amount);});
-    const labels=Object.keys(cats),data=labels.map(l=>cats[l]);
-    const ctx=document.getElementById("pieChart").getContext("2d");
-    if(pieInst) pieInst.destroy();
-    pieInst=new Chart(ctx,{type:"doughnut",data:{
-      labels:labels.length?labels:["No expenses"],
-      datasets:[{data:data.length?data:[1],backgroundColor:data.length?COLORS:["#e5e7eb"],borderWidth:2,borderColor:"#fff"}]
-    },options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"right",labels:{font:{family:"DM Sans"},boxWidth:12,padding:10}}}}});
-  }
- 
-  // ── COMPARE → saves to MySQL comparison table ──
   let cmpBarInst, cmpPieInst;
- 
-  async function runCompare(){
+  async function runCompare() {
     const val=document.getElementById("cmp-month").value;
     if(!val) return showToast("Please select a month","error");
-    if(!USER) return showToast("Please log in first","error");
     const[year,month]=val.split("-").map(Number);
-    try{
-      const res=await fetch(`${BASE}/save-comparison`,{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({user_id:USER.id,month,year})
-      });
+    try {
+      const res=await fetch(`${BASE}/save-comparison`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_id:USER.id,month,year})});
       const data=await res.json();
       document.getElementById("cmp-inc").textContent=fmt(data.total_income);
       document.getElementById("cmp-exp").textContent=fmt(data.total_expense);
@@ -566,30 +735,21 @@
     } catch { showToast("Server not reachable","error"); }
   }
  
-  function renderCompareCharts(){
-    const{labels,incData,expData}=getMonthlyData();
-    const ctx1=document.getElementById("cmpBarChart").getContext("2d");
+  function renderCompareCharts() {
+    const mi={},me={};
+    incomes.forEach(r=>{const m=r.income_date.slice(0,7);mi[m]=(mi[m]||0)+parseFloat(r.amount);});
+    expenses.forEach(r=>{const m=r.expense_date.slice(0,7);me[m]=(me[m]||0)+parseFloat(r.amount);});
+    const months=[...new Set([...Object.keys(mi),...Object.keys(me)])].sort();
     if(cmpBarInst) cmpBarInst.destroy();
-    cmpBarInst=new Chart(ctx1,{type:"bar",data:{labels:labels.length?labels:["No data"],datasets:[
-      {label:"Income",data:incData.length?incData:[0],backgroundColor:"#10b981cc",borderRadius:6},
-      {label:"Expense",data:expData.length?expData:[0],backgroundColor:"#ef4444cc",borderRadius:6}
-    ]},options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"top",labels:{font:{family:"DM Sans"},boxWidth:12}}},
-      scales:{y:{beginAtZero:true,grid:{color:"#f3f4f6"},ticks:{callback:v=>"₹"+v.toLocaleString("en-IN")}},x:{grid:{display:false}}}}});
-    const cats={};
-    expenses.forEach(r=>{cats[r.category]=(cats[r.category]||0)+parseFloat(r.amount);});
+    cmpBarInst=new Chart(document.getElementById("cmpBarChart").getContext("2d"),{type:"bar",data:{labels:months.length?months:["No data"],datasets:[{label:"Income",data:months.map(m=>mi[m]||0),backgroundColor:"#10b981cc",borderRadius:6},{label:"Expense",data:months.map(m=>me[m]||0),backgroundColor:"#ef4444cc",borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{family:"DM Sans"},boxWidth:12}}},scales:{y:{beginAtZero:true,grid:{color:"#f3f4f6"},ticks:{callback:v=>"₹"+v.toLocaleString("en-IN")}},x:{grid:{display:false}}}}});
+    const cats={};expenses.forEach(r=>{cats[r.category]=(cats[r.category]||0)+parseFloat(r.amount);});
     const cl=Object.keys(cats),cd=cl.map(l=>cats[l]);
-    const ctx2=document.getElementById("cmpPieChart").getContext("2d");
     if(cmpPieInst) cmpPieInst.destroy();
-    cmpPieInst=new Chart(ctx2,{type:"pie",data:{
-      labels:cl.length?cl:["No expenses"],
-      datasets:[{data:cd.length?cd:[1],backgroundColor:cd.length?COLORS:["#e5e7eb"],borderWidth:2,borderColor:"#fff"}]
-    },options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:"right",labels:{font:{family:"DM Sans"},boxWidth:12,padding:10}}}}});
+    cmpPieInst=new Chart(document.getElementById("cmpPieChart").getContext("2d"),{type:"pie",data:{labels:cl.length?cl:["No expenses"],datasets:[{data:cd.length?cd:[1],backgroundColor:cd.length?COLORS:["#e5e7eb"],borderWidth:2,borderColor:"#fff"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"right",labels:{font:{family:"DM Sans"},boxWidth:12,padding:10}}}}});
   }
  
-  // ── INIT ──
-  loadAll().then(refreshDashboard);
+  loadDashboard();
 </script>
 </body>
 </html>
+ 
