@@ -252,7 +252,8 @@ if(response.ok){
 
 showMessage("✅ Login successful! Redirecting...","success");
 
-localStorage.setItem("user",JSON.stringify(data.user));
+// ✅ NEW
+localStorage.setItem("smartexpense_user", JSON.stringify(data.user));
 
 setTimeout(()=>{
 window.location.href="workspace.html";
