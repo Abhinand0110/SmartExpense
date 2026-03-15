@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>SmartExpense | Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f9fafc;
+font-family:"Segoe UI",sans-serif;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#fff;
+border-bottom:1px solid #e5e7eb;
+padding:12px 28px;
+}
+
+.brand{
+font-weight:700;
+font-size:20px;
+color:#4f46e5;
+cursor:pointer;
+}
+
+/* PROFILE CARD */
+
+.profile-wrapper{
+max-width:900px;
+margin:auto;
+margin-top:60px;
+}
+
+.profile-card{
+
+background:#fff;
+border-radius:20px;
+padding:40px;
+border:2px solid #e5e7eb;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+
+}
+
+/* TITLE */
+
+.profile-title{
+font-size:28px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+/* INPUTS */
+
+.form-control{
+padding:12px;
+border-radius:10px;
+}
+
+/* PASSWORD BOX */
+
+.password-box{
+position:relative;
+}
+
+.password-toggle{
+
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#6b7280;
+
+}
+
+/* SAVE BUTTON */
+
+.save-btn{
+
+background:#c1bcf7;
+border:none;
+padding:10px 20px;
+border-radius:10px;
+
+}
+
+.save-btn:hover{
+background:#afa6fc;
+}
+/* SUCCESS TOAST */
+
+.toast-box{
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: #16a34a;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateX(120%);
+  transition: transform 0.4s ease;
+  z-index: 9999;
+}
+
+.toast-box.show{
+  transform: translateX(0);
+}
+
+.toast-box i{
+  font-size: 18px;
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar d-flex justify-content-between">
+
+<div class="brand" onclick="goBack()">SmartExpense</div>
+
+<button class="btn btn-outline-secondary btn-sm" onclick="goBack()">
+<i class="bi bi-arrow-left"></i> Back
+</button>
+
+</nav>
+
+
+<div class="container profile-wrapper">
+
+<div class="profile-card">
+
+<div class="profile-title">
+Personal Details
+</div>
+
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<label class="form-label">Full Name</label>
+
+<input
+type="text"
+id="name"
+class="form-control"
+placeholder="Your name">
+
+</div>
+
+
+<div class="col-md-6">
+
+<label class="form-label">Email</label>
+
+<input
+type="text"
+id="email"
+class="form-control"
+readonly>
+
+</div>
+
+
+<div class="col-md-6">
+
+<label class="form-label">Password</label>
+
+<div class="password-box">
+
+<input
+type="password"
+id="password"
+class="form-control"
+placeholder="Password">
+
+<i
+class="bi bi-eye password-toggle"
+onclick="togglePassword()"></i>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="mt-4">
+
+<button class="btn save-btn" onclick="saveProfile()">
+<i class="bi bi-save"></i> Save Profile
+</button>
+
+</div>
+
+</div>
+
+</div>
+<div id="successToast" class="toast-box">
+<i class="bi bi-check-circle-fill"></i>
+<span>Profile updated successfully</span>
+</div>
+
+
+<script>
+
+/* BACK BUTTON */
+
+function goBack(){
+
+window.location.href="workspace.html";
+
+}
+
+function showToast(){
+
+const toast=document.getElementById("successToast");
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+toast.classList.remove("show");
+},3000);
+
+}
+
+/* PASSWORD TOGGLE */
+
+function togglePassword(){
+
+const input=document.getElementById("password");
+
+if(input.type==="password"){
+input.type="text";
+}else{
+input.type="password";
+}
+
+}
+
+
+/* LOAD USER DATA */
+
+const user=JSON.parse(localStorage.getItem("user"));
+
+async function loadProfile(){
+
+const response=await fetch(`http://localhost:5000/profile/${user.id}`);
+
+const data=await response.json();
+
+document.getElementById("name").value=data.full_name;
+document.getElementById("email").value=data.email;
+document.getElementById("password").value=data.password;
+
+}
+
+loadProfile();
+
+
+/* SAVE PROFILE */
+
+async function saveProfile(){
+
+const name=document.getElementById("name").value;
+const password=document.getElementById("password").value;
+
+const response=await fetch("http://localhost:5000/update-profile",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:user.id,
+name:name,
+password:password
+
+})
+
+});
+
+if(response.ok){
+
+showToast();
+
+}else{
+
+alert("Update failed");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

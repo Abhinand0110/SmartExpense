@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartExpense | Workspace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+/* GLOBAL */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+  font-family: "Segoe UI", sans-serif;
+  background: #f9fafc;
+  color: #1f2937;
+}
+
+/* NAVBAR */
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 28px;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 20px;
+  color: #4f46e5;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #6b7280;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* PAGE */
+.page-title {
+  margin-top: 30px;
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.page-subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 40px;
+}
+
+/* CARD */
+.workspace-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 36px;
+  position: relative;
+  border: 2px solid #e5e7eb;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border 0.25s ease;
+}
+
+.workspace-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  border-color: #4f46e5;   /* blue border */
+}
+.icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+.icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+.icon-individual {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.workspace-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.workspace-desc {
+  color: #6b7280;
+  margin: 14px 0 24px;
+}
+
+.workspace-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: #4f46e5;
+}
+
+/* HOW IT WORKS */
+
+.how-it-works {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.how-title {
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #9ca3af;
+  margin-bottom: 28px;
+}
+
+.step {
+  text-align: center;
+}
+
+.step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  font-size: 20px;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* STAR RATING */
+
+.star {
+  font-size: 28px;
+  cursor: pointer;
+  color: #d1d5db;
+}
+
+.star.active {
+  color: #fbbf24;
+}
+
+.category.active {
+  background: #4f46e5;
+  color: white;
+}
+/* SUCCESS TOAST */
+
+.toast-box{
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: #16a34a;
+  color: white;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: translateX(120%);
+  transition: transform 0.4s ease;
+  z-index: 9999;
+}
+
+.toast-box.show{
+  transform: translateX(0);
+}
+
+.toast-box i{
+  font-size: 18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar d-flex justify-content-between">
+
+<div class="brand">SmartExpense</div>
+
+<div class="user-area">
+
+<i class="bi bi-chat-left-text"
+style="font-size:20px;cursor:pointer"
+data-bs-toggle="modal"
+data-bs-target="#feedbackModal"></i>
+
+<div class="avatar" onclick="openProfile()">U</div>
+
+</div>
+
+</nav>
+
+
+<div class="container">
+
+<h1 class="page-title">Welcome to SmartExpense</h1>
+<p class="page-subtitle">Access your personal expense management workspace.</p>
+
+
+<div class="row justify-content-center">
+<div class="col-md-6">
+
+<div class="workspace-card text-center">
+
+  <div class="icon-box mx-auto">
+    <i class="bi bi-person"></i>
+  </div>
+
+  <div class="workspace-title">Individual Workspace</div>
+
+  <div class="workspace-desc mx-auto">
+    Track daily expenses, manage categories, and gain insights into your personal spending patterns.
+  </div>
+
+  <a href="Individual_workspace.html" class="workspace-link">
+    Enter Workspace <i class="bi bi-arrow-right"></i>
+  </a>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- HOW IT WORKS -->
+
+<div class="how-it-works">
+
+<div class="how-title">HOW IT WORKS</div>
+
+<div class="row">
+
+<div class="col-md-4 step">
+<div class="step-icon"><i class="bi bi-person-check"></i></div>
+<div class="step-title"><b>1. Login</b></div>
+<div class="step-desc">Sign in to access your personal workspace.</div>
+</div>
+
+<div class="col-md-4 step">
+<div class="step-icon"><i class="bi bi-plus-circle"></i></div>
+<div class="step-title"><b>2. Add Expenses</b></div>
+<div class="step-desc">Record expenses with category and date.</div>
+</div>
+
+<div class="col-md-4 step">
+<div class="step-icon"><i class="bi bi-bar-chart"></i></div>
+<div class="step-title"> <b>3. View Insights</b></div>
+<div class="step-desc">Analyze spending using charts and reports.</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FEEDBACK MODAL -->
+
+<div class="modal fade" id="feedbackModal">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content p-4">
+
+<h5 class="mb-3">Share Feedback</h5>
+
+<label>Feedback Category</label>
+
+<div class="mb-3">
+
+<button class="btn btn-outline-secondary btn-sm category active">General</button>
+<button class="btn btn-outline-secondary btn-sm category">Bug Report</button>
+<button class="btn btn-outline-secondary btn-sm category">Feature Request</button>
+
+</div>
+
+
+<label>Overall Experience</label>
+
+<div id="starRating" class="mb-3">
+
+<span class="star" data-value="1">★</span>
+<span class="star" data-value="2">★</span>
+<span class="star" data-value="3">★</span>
+<span class="star" data-value="4">★</span>
+<span class="star" data-value="5">★</span>
+
+</div>
+
+
+<label>Your Message</label>
+
+<textarea class="form-control mb-3"
+placeholder="What's on your mind? Be as specific as you like..."></textarea>
+
+<button id="submitFeedback" class="btn btn-primary w-100">
+Submit Feedback
+</button>
+
+</div>
+</div>
+</div>
+<div id="successToast" class="toast-box">
+<i class="bi bi-check-circle-fill"></i>
+<span>Thanks for sending feedback!</span>
+</div>
+
+
+<script>
+
+function openProfile(){
+window.location.href="profile.html";
+}
+
+
+/* CATEGORY BUTTONS */
+
+let selectedCategory="General";
+
+document.querySelectorAll(".category").forEach(btn=>{
+
+btn.addEventListener("click",function(){
+
+document.querySelectorAll(".category").forEach(b=>{
+b.classList.remove("active");
+});
+
+this.classList.add("active");
+
+selectedCategory=this.innerText;
+
+});
+
+});
+
+
+/* STAR RATING */
+
+let rating=0;
+
+const stars=document.querySelectorAll(".star");
+
+stars.forEach(star=>{
+
+star.addEventListener("click",function(){
+
+rating=this.getAttribute("data-value");
+
+stars.forEach(s=>s.classList.remove("active"));
+
+for(let i=0;i<rating;i++){
+stars[i].classList.add("active");
+}
+
+});
+
+});
+
+function showToast(){
+
+const toast=document.getElementById("successToast");
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+toast.classList.remove("show");
+},3000);
+
+}
+
+/* SEND FEEDBACK */
+
+document.getElementById("submitFeedback").addEventListener("click",async function(){
+
+const message=document.querySelector("textarea").value;
+
+if(!message){
+alert("Please write feedback");
+return;
+}
+
+try{
+
+const response=await fetch("http://localhost:5000/send-feedback",{
+
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+category:selectedCategory,
+rating:rating,
+message:message
+})
+
+});
+
+if(response.ok){
+
+showToast();
+
+document.querySelector("textarea").value="";
+
+stars.forEach(s=>s.classList.remove("active"));
+
+rating=0;
+
+}else{
+
+alert("Failed to send feedback");
+
+}
+
+}catch{
+
+alert("Server error");
+
+}
+
+});
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

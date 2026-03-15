@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Personal Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { background:#f7f9fc; font-family:Segoe UI }
+.sidebar{
+  width:240px; background:linear-gradient(#2e2a6a,#1b1945);
+  color:#fff; position:fixed; height:100vh; padding:20px
+}
+.main{ margin-left:260px; padding:30px }
+.card{ border-radius:18px; box-shadow:0 8px 25px rgba(0,0,0,.05) }
+.kpi-icon{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;font-size:22px
+}
+.btn-primary{ border-radius:14px }
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h5>Personal Dashboard</h5>
+  <button class="btn btn-light w-100 my-4" onclick="showModal()">+ Add Expense</button>
+</div>
+
+<div class="main">
+
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card p-3 d-flex flex-row align-items-center">
+      <div class="kpi-icon bg-primary text-white me-3"><i class="bi bi-currency-rupee"></i></div>
+      <div><small>Total</small><h5 id="total">₹0</h5></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 d-flex flex-row align-items-center">
+      <div class="kpi-icon bg-success text-white me-3"><i class="bi bi-tag"></i></div>
+      <div><small>Top Category</small><h5 id="top">N/A</h5></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 d-flex flex-row align-items-center">
+      <div class="kpi-icon bg-warning text-white me-3"><i class="bi bi-graph-up"></i></div>
+      <div><small>Avg Spend</small><h5 id="avg">₹0</h5></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 d-flex flex-row align-items-center">
+      <div class="kpi-icon bg-info text-white me-3"><i class="bi bi-list"></i></div>
+      <div><small>Records</small><h5 id="count">0</h5></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6"><div class="card p-4"><canvas id="pie"></canvas></div></div>
+  <div class="col-md-6"><div class="card p-4"><canvas id="line"></canvas></div></div>
+</div>
+
+</div>
+
+<!-- ADD EXPENSE MODAL -->
+<div class="modal fade" id="expenseModal">
+<div class="modal-dialog">
+<div class="modal-content p-3">
+<h5>Add Expense</h5>
+<input id="title" class="form-control mb-2" placeholder="Title">
+<input id="amount" type="number" class="form-control mb-2" placeholder="Amount">
+<select id="category" class="form-control mb-2">
+<option>Food</option><option>Health</option><option>Transport</option>
+</select>
+<input id="date" type="date" class="form-control mb-2">
+<button class="btn btn-primary w-100" onclick="addExpense()">Save</button>
+</div>
+</div>
+</div>
+
+<script>
+const userId = 1;
+const API = "http://localhost:3000";
+
+function showModal(){
+  new bootstrap.Modal(document.getElementById("expenseModal")).show()
+}
+
+async function loadData(){
+  const s = await fetch(`${API}/stats/${userId}`).then(r=>r.json());
+  document.getElementById("total").innerText = "₹"+s.total;
+  document.getElementById("avg").innerText = "₹"+s.avg.toFixed(2);
+  document.getElementById("count").innerText = s.count;
+  document.getElementById("top").innerText = s.top;
+
+  const c = await fetch(`${API}/charts/${userId}`).then(r=>r.json());
+  new Chart(pie,{type:"doughnut",data:{labels:c.pie.map(x=>x.category),datasets:[{data:c.pie.map(x=>x.total),backgroundColor:["#6c63ff","#4ade80","#facc15"]}]}})
+  new Chart(line,{type:"bar",data:{labels:c.timeline.map(x=>x.expense_date),datasets:[{data:c.timeline.map(x=>x.total),backgroundColor:"#6c63ff"}]}})
+}
+
+async function addExpense(){
+  await fetch(`${API}/expense`,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      user_id:userId,
+      title:title.value,
+      amount:amount.value,
+      category:category.value,
+      expense_date:date.value
+    })
+  })
+  location.reload()
+}
+
+loadData()
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
