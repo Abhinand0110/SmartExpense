@@ -346,11 +346,12 @@ def dashboard_data():
 # FEEDBACK
 # ════════════════════════════════════════════════════════
  
-@app.post("/send-feedback")
-def send_feedback():
-    data = request.get_json()
-    email_body = f"SmartExpense Feedback\n\nCategory: {data['category']}\nRating: {data['rating']} stars\n\nMessage:\n{data['message']}"
+import threading
+ 
+def send_email_background(category, rating, message):
+    """Send email in background thread — does not block the response."""
     try:
+        email_body = f"SmartExpense Feedback\n\nCategory: {category}\nRating: {rating} stars\n\nMessage:\n{message}"
         msg = MIMEText(email_body)
         msg["Subject"] = "New SmartExpense Feedback"
         msg["From"] = "smartexpense10@gmail.com"
@@ -360,10 +361,38 @@ def send_feedback():
         server.login("smartexpense10@gmail.com", "xjlh jbmd jvkm gbxc")
         server.send_message(msg)
         server.quit()
-        return jsonify({"message": "Feedback sent successfully"}), 200
+        print("✅ Feedback email sent")
     except Exception as e:
-        print(e)
-        return jsonify({"message": "Failed to send feedback"}), 500
+        print("Email error:", e)
+ 
+@app.post("/send-feedback")
+def send_feedback():
+    data     = request.get_json()
+    user_id  = data.get("user_id")
+    category = data.get("category", "General")
+    rating   = data.get("rating", 0)
+    message  = data.get("message", "")
+ 
+    # ✅ Step 1: Save to DB immediately (instant)
+    try:
+        db = get_db(); cursor = db.cursor(dictionary=True)
+        cursor.execute(
+            "INSERT INTO feedback (user_id, category, rating, message) VALUES (%s, %s, %s, %s)",
+            (user_id, category, rating, message)
+        )
+        db.commit()
+        cursor.close(); db.close()
+    except Exception as e:
+        print("DB error:", e)
+        return jsonify({"message": "Failed to save feedback"}), 500
+ 
+    # ✅ Step 2: Send email in background (non-blocking)
+    thread = threading.Thread(target=send_email_background, args=(category, rating, message))
+    thread.daemon = True
+    thread.start()
+ 
+    # ✅ Return instantly without waiting for email
+    return jsonify({"message": "Feedback submitted successfully"}), 200
  
  
 if __name__ == "__main__":
