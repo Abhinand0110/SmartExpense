@@ -3,8 +3,10 @@ from flask_cors import CORS
 import mysql.connector
 import re
 import smtplib
+import random
+import threading
 from email.mime.text import MIMEText
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
  
 app = Flask(__name__)
 CORS(app)
@@ -67,6 +69,228 @@ def register():
         if err.errno == 1062:
             return jsonify({"message": "Email already exists"}), 400
         return jsonify({"message": "Database error"}), 500
+    finally:
+        cursor.close(); db.close()
+ 
+ 
+# ════════════════════════════════════════════════════════
+# OTP — in-memory store {email: {otp, expiry, full_name, password}}
+# ════════════════════════════════════════════════════════
+ 
+import random
+from datetime import timedelta
+ 
+otp_store = {}   # temporary in-memory OTP storage
+ 
+def send_otp_email(to_email, otp):
+    """Send OTP email in background thread."""
+    try:
+        body = f"""Hi,
+ 
+Your SmartExpense verification code is:
+ 
+  {otp}
+ 
+This OTP is valid for 5 minutes. Do not share it with anyone.
+ 
+— SmartExpense Team"""
+        msg = MIMEText(body)
+        msg["Subject"] = "SmartExpense – Email Verification OTP"
+        msg["From"]    = "smartexpense10@gmail.com"
+        msg["To"]      = to_email
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login("smartexpense10@gmail.com", "xjlh jbmd jvkm gbxc")
+        server.send_message(msg)
+        server.quit()
+        print(f"✅ OTP sent to {to_email}")
+    except Exception as e:
+        print("OTP email error:", e)
+ 
+@app.post("/send-otp")
+def send_otp():
+    """Generate OTP, store it, send to email — does NOT create user yet."""
+    data      = request.get_json()
+    full_name = data.get("full_name", "")
+    email     = data.get("email", "")
+    password  = data.get("password", "")
+ 
+    if not email:
+        return jsonify({"message": "Email required"}), 400
+ 
+    # Check if email already exists
+    db = get_db(); cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id FROM users WHERE email=%s LIMIT 1", (email,))
+    existing = cursor.fetchone()
+    cursor.close(); db.close()
+    if existing:
+        return jsonify({"message": "Email already registered"}), 400
+ 
+    # Generate 6-digit OTP
+    otp    = str(random.randint(100000, 999999))
+    expiry = datetime.now() + timedelta(minutes=5)
+ 
+    # Store in memory
+    otp_store[email] = {
+        "otp":       otp,
+        "expiry":    expiry,
+        "full_name": full_name,
+        "password":  password
+    }
+ 
+    # Send email in background (non-blocking)
+    thread = threading.Thread(target=send_otp_email, args=(email, otp))
+    thread.daemon = True
+    thread.start()
+ 
+    return jsonify({"message": "OTP sent successfully"}), 200
+ 
+ 
+@app.post("/verify-otp")
+def verify_otp():
+    """Verify OTP — if correct, create the user account."""
+    data  = request.get_json()
+    email = data.get("email", "")
+    otp   = data.get("otp", "")
+ 
+    if email not in otp_store:
+        return jsonify({"message": "OTP expired or not requested. Please try again."}), 400
+ 
+    record = otp_store[email]
+ 
+    # Check expiry
+    if datetime.now() > record["expiry"]:
+        del otp_store[email]
+        return jsonify({"message": "OTP has expired. Please register again."}), 400
+ 
+    # Check OTP value
+    if otp != record["otp"]:
+        return jsonify({"message": "Incorrect OTP. Please try again."}), 400
+ 
+    # ✅ OTP correct — create user
+    db = get_db(); cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute(
+            "INSERT INTO users (full_name, email, password) VALUES (%s, %s, %s)",
+            (record["full_name"], email, record["password"])
+        )
+        db.commit()
+        del otp_store[email]   # clean up
+        return jsonify({"message": "Account created successfully"}), 200
+    except mysql.connector.Error as err:
+        if err.errno == 1062:
+            return jsonify({"message": "Email already registered"}), 400
+        return jsonify({"message": "Database error"}), 500
+    finally:
+        cursor.close(); db.close()
+ 
+ 
+# ════════════════════════════════════════════════════════
+# FORGOT PASSWORD — OTP stored separately
+# ════════════════════════════════════════════════════════
+ 
+forgot_otp_store = {}  # {email: {otp, expiry}}
+ 
+@app.post("/forgot-password-otp")
+def forgot_password_otp():
+    """Check email exists, generate OTP, send it."""
+    data  = request.get_json()
+    email = data.get("email", "").strip()
+ 
+    if not email:
+        return jsonify({"message": "Email required"}), 400
+ 
+    # Check if email is registered
+    db = get_db(); cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id FROM users WHERE email=%s LIMIT 1", (email,))
+    user = cursor.fetchone()
+    cursor.close(); db.close()
+ 
+    if not user:
+        return jsonify({"message": "No account found with this email"}), 404
+ 
+    # Generate OTP
+    otp    = str(random.randint(100000, 999999))
+    expiry = datetime.now() + timedelta(minutes=5)
+    forgot_otp_store[email] = {"otp": otp, "expiry": expiry}
+ 
+    # Send OTP email in background
+    def send_forgot_otp(to_email, otp_code):
+        try:
+            body = f"""Hi,
+ 
+You requested a password reset for your SmartExpense account.
+ 
+Your OTP is:  {otp_code}
+ 
+This OTP is valid for 5 minutes. If you did not request this, ignore this email.
+ 
+— SmartExpense Team"""
+            msg = MIMEText(body)
+            msg["Subject"] = "SmartExpense – Password Reset OTP"
+            msg["From"]    = "smartexpense10@gmail.com"
+            msg["To"]      = to_email
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.starttls()
+            server.login("smartexpense10@gmail.com", "xjlh jbmd jvkm gbxc")
+            server.send_message(msg)
+            server.quit()
+            print(f"✅ Forgot password OTP sent to {to_email}")
+        except Exception as e:
+            print("Forgot OTP email error:", e)
+ 
+    thread = threading.Thread(target=send_forgot_otp, args=(email, otp))
+    thread.daemon = True
+    thread.start()
+ 
+    return jsonify({"message": "OTP sent to your email"}), 200
+ 
+ 
+@app.post("/verify-forgot-otp")
+def verify_forgot_otp():
+    """Verify the forgot-password OTP — returns success so frontend can show new password form."""
+    data  = request.get_json()
+    email = data.get("email", "")
+    otp   = data.get("otp", "")
+ 
+    if email not in forgot_otp_store:
+        return jsonify({"message": "OTP expired or not requested. Please try again."}), 400
+ 
+    record = forgot_otp_store[email]
+ 
+    if datetime.now() > record["expiry"]:
+        del forgot_otp_store[email]
+        return jsonify({"message": "OTP has expired. Please try again."}), 400
+ 
+    if otp != record["otp"]:
+        return jsonify({"message": "Incorrect OTP. Please try again."}), 400
+ 
+    # ✅ OTP correct — don't delete yet, mark as verified
+    forgot_otp_store[email]["verified"] = True
+    return jsonify({"message": "OTP verified"}), 200
+ 
+ 
+@app.post("/reset-password")
+def reset_password():
+    """Reset password — only allowed if OTP was verified."""
+    data         = request.get_json()
+    email        = data.get("email", "")
+    new_password = data.get("new_password", "")
+ 
+    if not is_strong_password(new_password):
+        return jsonify({"message": "Password is too weak"}), 400
+ 
+    if email not in forgot_otp_store or not forgot_otp_store[email].get("verified"):
+        return jsonify({"message": "OTP not verified. Please verify OTP first."}), 403
+ 
+    db = get_db(); cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("UPDATE users SET password=%s WHERE email=%s", (new_password, email))
+        db.commit()
+        del forgot_otp_store[email]  # clean up
+        return jsonify({"message": "Password reset successfully"}), 200
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
     finally:
         cursor.close(); db.close()
  
@@ -397,3 +621,4 @@ def send_feedback():
  
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
+ 
