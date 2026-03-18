@@ -105,6 +105,43 @@ margin-bottom:14px;
 .left-panel{display:none;}
 }
  
+/* OTP INPUT STYLING */
+.otp-inputs{
+display:flex;
+gap:10px;
+justify-content:center;
+margin:20px 0;
+}
+ 
+.otp-inputs input{
+width:48px;
+height:52px;
+text-align:center;
+font-size:22px;
+font-weight:700;
+border:2px solid #dee2e6;
+border-radius:10px;
+outline:none;
+transition:border 0.2s;
+}
+ 
+.otp-inputs input:focus{
+border-color:#5a67ff;
+box-shadow:0 0 0 3px rgba(90,103,255,0.15);
+}
+ 
+.otp-timer{
+font-size:13px;
+color:#6c757d;
+text-align:center;
+margin-bottom:8px;
+}
+ 
+.otp-timer span{
+font-weight:600;
+color:#5a67ff;
+}
+ 
 </style>
 </head>
  
@@ -114,297 +151,401 @@ margin-bottom:14px;
 <div class="row g-0 h-100">
  
 <!-- LEFT PANEL -->
- 
 <div class="col-md-5 left-panel">
- 
-<div>
-<div class="app-name">SmartExpense</div>
-<div class="app-slogan">Track. Analyze. Control your money.</div>
-</div>
- 
-<div class="text-center">
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"
-class="left-image">
-</div>
- 
-<div class="quote-box">
-<div class="quote-text">"All your expenses. One smart place."</div>
-<div class="quote-author">— SmartExpense</div>
-</div>
- 
+  <div>
+    <div class="app-name">SmartExpense</div>
+    <div class="app-slogan">Track. Analyze. Control your money.</div>
+  </div>
+  <div class="text-center">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png" class="left-image">
+  </div>
+  <div class="quote-box">
+    <div class="quote-text">"All your expenses. One smart place."</div>
+    <div class="quote-author">— SmartExpense</div>
+  </div>
 </div>
  
 <!-- RIGHT PANEL -->
- 
 <div class="col-md-7 register-container">
+  <div class="register-card">
  
-<div class="register-card">
+    <h3 class="fw-bold mb-1">Create your account</h3>
+    <p class="text-muted mb-4">Start tracking your expenses today.</p>
  
-<h3 class="fw-bold mb-1">Create your account</h3>
-<p class="text-muted mb-4">Start tracking your expenses today.</p>
+    <form id="registerForm">
  
-<form id="registerForm">
+      <div id="msgBox" class="alert d-none"></div>
  
-<div id="msgBox" class="alert d-none"></div>
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="fullName" class="form-control" required>
+      </div>
  
-<div class="mb-3">
-<label class="form-label">Full Name</label>
-<input type="text" id="fullName" class="form-control" required>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required>
+        <small id="emailMsg" class="fw-semibold"></small>
+      </div>
+ 
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" id="password" class="form-control" required>
+          <span class="input-group-text password-toggle" onclick="togglePassword('password','eye1')">
+            <i id="eye1" class="bi bi-eye"></i>
+          </span>
+        </div>
+        <small>Password must be strong (8+ chars, Uppercase, Lowercase, Number, Special symbol)</small>
+        <small id="passStrength" class="fw-semibold"></small>
+      </div>
+ 
+      <div class="mb-3">
+        <label class="form-label">Confirm Password</label>
+        <div class="input-group">
+          <input type="password" id="confirmPassword" class="form-control" required>
+          <span class="input-group-text password-toggle" onclick="togglePassword('confirmPassword','eye2')">
+            <i id="eye2" class="bi bi-eye"></i>
+          </span>
+        </div>
+        <small id="confirmMsg" class="fw-semibold"></small>
+      </div>
+ 
+      <button id="signupBtn" type="submit" class="btn btn-primary w-100 mb-4">
+        Create Account
+      </button>
+ 
+      <p class="text-center">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+ 
+    </form>
+  </div>
 </div>
- 
-<div class="mb-3">
-<label class="form-label">Email</label>
-<input type="email" id="email" class="form-control" required>
- 
-<small id="emailMsg" class="fw-semibold"></small>
- 
-</div>
- 
-<div class="mb-3">
- 
-<label class="form-label">Password</label>
- 
-<div class="input-group">
-<input type="password" id="password" class="form-control" required>
- 
-<span class="input-group-text password-toggle"
-onclick="togglePassword('password','eye1')">
- 
-<i id="eye1" class="bi bi-eye"></i>
- 
-</span>
-</div>
- 
-<small>Password must be strong (8+ chars, Uppercase, Lowercase, Number, Special symbol)</small>
- 
-<small id="passStrength" class="fw-semibold"></small>
- 
-</div>
- 
-<div class="mb-3">
- 
-<label class="form-label">Confirm Password</label>
- 
-<div class="input-group">
-<input type="password" id="confirmPassword" class="form-control" required>
- 
-<span class="input-group-text password-toggle"
-onclick="togglePassword('confirmPassword','eye2')">
- 
-<i id="eye2" class="bi bi-eye"></i>
- 
-</span>
-</div>
- 
-<small id="confirmMsg" class="fw-semibold"></small>
- 
-</div>
- 
-<button id="signupBtn" type="submit" class="btn btn-primary w-100 mb-4">
-Create Account
-</button>
- 
-<p class="text-center">
-Already have an account?
-<a href="login.html">Sign in</a>
-</p>
- 
-</form>
  
 </div>
 </div>
+ 
+<!-- ══════════════════════════════
+     OTP VERIFICATION MODAL
+══════════════════════════════ -->
+<div class="modal fade" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4 text-center">
+ 
+      <div style="font-size:42px;margin-bottom:8px">📧</div>
+      <h5 class="fw-bold mb-1">Verify your email</h5>
+      <p class="text-muted mb-0" style="font-size:14px">We sent a 6-digit OTP to</p>
+      <p class="fw-semibold mb-3" id="otpEmailDisplay" style="color:#5a67ff;font-size:14px"></p>
+ 
+      <div id="otpMsgBox" class="alert d-none" style="border-radius:10px;font-size:14px;padding:10px 12px;margin-bottom:12px"></div>
+ 
+      <!-- 6 individual OTP boxes -->
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" class="otp-box" id="otp0" oninput="otpInput(0)" onkeydown="otpBack(event,0)">
+        <input type="text" maxlength="1" class="otp-box" id="otp1" oninput="otpInput(1)" onkeydown="otpBack(event,1)">
+        <input type="text" maxlength="1" class="otp-box" id="otp2" oninput="otpInput(2)" onkeydown="otpBack(event,2)">
+        <input type="text" maxlength="1" class="otp-box" id="otp3" oninput="otpInput(3)" onkeydown="otpBack(event,3)">
+        <input type="text" maxlength="1" class="otp-box" id="otp4" oninput="otpInput(4)" onkeydown="otpBack(event,4)">
+        <input type="text" maxlength="1" class="otp-box" id="otp5" oninput="otpInput(5)" onkeydown="otpBack(event,5)">
+      </div>
+ 
+      <div class="otp-timer" id="otpTimer">OTP expires in <span id="timerCount">5:00</span></div>
+ 
+      <button id="verifyOtpBtn" class="btn btn-primary w-100 mb-2" onclick="verifyOtp()">
+        Verify & Create Account
+      </button>
+ 
+      <button class="btn btn-outline-secondary btn-sm w-100 mb-2" id="resendBtn" onclick="resendOtp()" disabled>
+        Resend OTP
+      </button>
+ 
+      <button class="btn btn-link btn-sm text-muted w-100" onclick="backToForm()">← Back to form</button>
+ 
+    </div>
+  </div>
 </div>
-</div>
+ 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
  
 <script>
  
-function togglePassword(inputId,iconId){
- 
-const input=document.getElementById(inputId);
-const icon=document.getElementById(iconId);
- 
-if(input.type==="password"){
-input.type="text";
-icon.classList.replace("bi-eye","bi-eye-slash");
-}else{
-input.type="password";
-icon.classList.replace("bi-eye-slash","bi-eye");
+// ── Helpers ──
+function togglePassword(inputId, iconId){
+  const input = document.getElementById(inputId);
+  const icon  = document.getElementById(iconId);
+  if(input.type === "password"){
+    input.type = "text";
+    icon.classList.replace("bi-eye","bi-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("bi-eye-slash","bi-eye");
+  }
 }
  
-}
- 
-function showMessage(message,type="danger"){
- 
-const msg=document.getElementById("msgBox");
- 
-msg.className=`alert alert-${type}`;
-msg.innerHTML=message;
-msg.classList.remove("d-none");
- 
+function showMessage(message, type="danger"){
+  const msg = document.getElementById("msgBox");
+  msg.className = `alert alert-${type}`;
+  msg.innerHTML = message;
+  msg.classList.remove("d-none");
 }
  
 function hideMessage(){
-document.getElementById("msgBox").classList.add("d-none");
+  document.getElementById("msgBox").classList.add("d-none");
 }
  
-// ✅ Validates real TLD + every domain segment must be 2+ chars
+function showOtpMessage(message, type="danger"){
+  const msg = document.getElementById("otpMsgBox");
+  msg.className = `alert alert-${type}`;
+  msg.innerHTML = message;
+  msg.classList.remove("d-none");
+}
+ 
+function hideOtpMessage(){
+  document.getElementById("otpMsgBox").classList.add("d-none");
+}
+ 
+// ── Validation ──
 const VALID_TLDS = ["com","in","org","net","edu","gov","io","co","uk","us","au","ca","de","fr","jp","info","biz","me","tv","app","dev","ai","ac","college","school"];
  
 function isValidEmail(email){
-  // Basic structure check
   const basic = /^[^\s@]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if(!basic.test(email)) return false;
- 
-  const parts   = email.split("@");
-  const domain  = parts[1];                        // e.g. "gmail.com" or "gmail.c.in"
-  const segments = domain.split(".");              // ["gmail","com"] or ["gmail","c","in"]
- 
-  // ❌ Every segment in domain must be at least 2 chars — blocks "gmail.c.in"
-  for(const seg of segments){
-    if(seg.length < 2) return false;
-  }
- 
-  // ✅ Last segment must be a known real TLD
+  const domain   = email.split("@")[1];
+  const segments = domain.split(".");
+  for(const seg of segments){ if(seg.length < 2) return false; }
   const tld = segments[segments.length - 1].toLowerCase();
   return VALID_TLDS.includes(tld);
 }
  
 function isStrongPassword(password){
-const pattern=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-return pattern.test(password);
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
 }
  
-const emailInput=document.getElementById("email");
-const passwordInput=document.getElementById("password");
-const confirmInput=document.getElementById("confirmPassword");
+// ── Live validation ──
+const emailInput    = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const confirmInput  = document.getElementById("confirmPassword");
+const passStrength  = document.getElementById("passStrength");
+const confirmMsg    = document.getElementById("confirmMsg");
+const emailMsg      = document.getElementById("emailMsg");
  
-const passStrength=document.getElementById("passStrength");
-const confirmMsg=document.getElementById("confirmMsg");
-const emailMsg=document.getElementById("emailMsg");
- 
-passwordInput.addEventListener("input",function(){
- 
-const pwd=passwordInput.value;
- 
-if(isStrongPassword(pwd)){
-passStrength.innerHTML="✅ Strong Password";
-passStrength.className="text-success";
-}else{
-passStrength.innerHTML="❌ Weak Password";
-passStrength.className="text-danger";
-}
- 
+passwordInput.addEventListener("input", function(){
+  if(isStrongPassword(passwordInput.value)){
+    passStrength.innerHTML   = "✅ Strong Password";
+    passStrength.className   = "text-success";
+  } else {
+    passStrength.innerHTML   = "❌ Weak Password";
+    passStrength.className   = "text-danger";
+  }
 });
  
-confirmInput.addEventListener("input",function(){
- 
-if(passwordInput.value===confirmInput.value){
-confirmMsg.innerHTML="✅ Passwords match";
-confirmMsg.className="text-success";
-}else{
-confirmMsg.innerHTML="❌ Passwords do not match";
-confirmMsg.className="text-danger";
-}
- 
+confirmInput.addEventListener("input", function(){
+  if(passwordInput.value === confirmInput.value){
+    confirmMsg.innerHTML = "✅ Passwords match";
+    confirmMsg.className = "text-success";
+  } else {
+    confirmMsg.innerHTML = "❌ Passwords do not match";
+    confirmMsg.className = "text-danger";
+  }
 });
  
-emailInput.addEventListener("blur",async function(){
- 
-const email=emailInput.value.trim();
- 
-// ✅ Check format first before hitting the backend
-if(!isValidEmail(email)){
-emailMsg.innerHTML="❌ Enter a valid email (e.g. name@gmail.com)";
-emailMsg.className="text-danger";
-return;
-}
- 
-const res=await fetch(`http://localhost:5000/check-email?email=${email}`);
-const data=await res.json();
- 
-if(data.exists){
-emailMsg.innerHTML="❌ Email already registered";
-emailMsg.className="text-danger";
-}else{
-emailMsg.innerHTML="✅ Email available";
-emailMsg.className="text-success";
-}
- 
+emailInput.addEventListener("blur", async function(){
+  const email = emailInput.value.trim();
+  if(!isValidEmail(email)){
+    emailMsg.innerHTML = "❌ Enter a valid email (e.g. name@gmail.com)";
+    emailMsg.className = "text-danger";
+    return;
+  }
+  const res  = await fetch(`http://localhost:5000/check-email?email=${email}`);
+  const data = await res.json();
+  if(data.exists){
+    emailMsg.innerHTML = "❌ Email already registered";
+    emailMsg.className = "text-danger";
+  } else {
+    emailMsg.innerHTML = "✅ Email available";
+    emailMsg.className = "text-success";
+  }
 });
  
-document.getElementById("registerForm").addEventListener("submit",async function(e){
- 
-e.preventDefault();
- 
-hideMessage();
- 
-// ✅ Block submit if email format is invalid
-const email=emailInput.value.trim();
-if(!isValidEmail(email)){
-showMessage("❌ Please enter a valid email address (e.g. name@gmail.com)");
-return;
+// ── OTP boxes — auto-advance & backspace ──
+function otpInput(index){
+  const val = document.getElementById("otp" + index).value;
+  // Only allow digits
+  document.getElementById("otp" + index).value = val.replace(/\D/g,"");
+  if(val && index < 5){
+    document.getElementById("otp" + (index+1)).focus();
+  }
 }
  
-// ✅ Block submit if passwords don't match
-if(passwordInput.value !== confirmInput.value){
-showMessage("❌ Passwords do not match");
-return;
+function otpBack(event, index){
+  if(event.key === "Backspace" && !document.getElementById("otp"+index).value && index > 0){
+    document.getElementById("otp" + (index-1)).focus();
+  }
 }
  
-// ✅ Block submit if password is weak
-if(!isStrongPassword(passwordInput.value)){
-showMessage("❌ Password is too weak");
-return;
+function getOtpValue(){
+  let otp = "";
+  for(let i = 0; i < 6; i++) otp += document.getElementById("otp"+i).value;
+  return otp;
 }
  
-const signupBtn=document.getElementById("signupBtn");
+function clearOtpBoxes(){
+  for(let i = 0; i < 6; i++) document.getElementById("otp"+i).value = "";
+  document.getElementById("otp0").focus();
+}
  
-signupBtn.disabled=true;
-signupBtn.innerHTML="Creating account...";
+// ── Timer ──
+let timerInterval = null;
  
-const fullName=document.getElementById("fullName").value.trim();
-const password=passwordInput.value;
+function startTimer(){
+  let seconds = 300; // 5 minutes
+  const display  = document.getElementById("timerCount");
+  const timerDiv = document.getElementById("otpTimer");
+  const resendBtn = document.getElementById("resendBtn");
+  resendBtn.disabled = true;
  
-try{
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    seconds--;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    display.textContent = m + ":" + String(s).padStart(2,"0");
+    if(seconds <= 0){
+      clearInterval(timerInterval);
+      timerDiv.innerHTML = "<span style='color:#ef4444'>OTP expired. Please resend.</span>";
+      resendBtn.disabled = false;
+    }
+  }, 1000);
+}
  
-const response=await fetch("http://localhost:5000/register",{
+// ── Form Submit → Send OTP ──
+let pendingEmail = "";
  
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-full_name:fullName,
-email:email,
-password:password
-})
+document.getElementById("registerForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  hideMessage();
  
+  const fullName = document.getElementById("fullName").value.trim();
+  const email    = emailInput.value.trim();
+  const password = passwordInput.value;
+ 
+  if(!fullName)              return showMessage("❌ Please enter your full name");
+  if(!isValidEmail(email))   return showMessage("❌ Please enter a valid email address");
+  if(email !== email)        return; // redundant guard
+  if(!isStrongPassword(password)) return showMessage("❌ Password is too weak");
+  if(password !== confirmInput.value) return showMessage("❌ Passwords do not match");
+ 
+  const btn = document.getElementById("signupBtn");
+  btn.disabled  = true;
+  btn.innerHTML = "Sending OTP...";
+ 
+  try{
+    const res  = await fetch("http://localhost:5000/send-otp", {
+      method:  "POST",
+      headers: {"Content-Type":"application/json"},
+      body:    JSON.stringify({ full_name: fullName, email, password })
+    });
+    const data = await res.json();
+ 
+    if(res.ok){
+      pendingEmail = email;
+      // Show OTP modal
+      document.getElementById("otpEmailDisplay").textContent = email;
+      hideOtpMessage();
+      clearOtpBoxes();
+      const otpModal = new bootstrap.Modal(document.getElementById("otpModal"));
+      otpModal.show();
+      startTimer();
+    } else {
+      showMessage("❌ " + data.message);
+    }
+  } catch{
+    showMessage("❌ Server not reachable");
+  }
+ 
+  btn.disabled  = false;
+  btn.innerHTML = "Create Account";
 });
  
-const data=await response.json();
+// ── Verify OTP ──
+async function verifyOtp(){
+  hideOtpMessage();
+  const otp = getOtpValue();
  
-if(response.ok){
+  if(otp.length < 6){
+    showOtpMessage("❌ Please enter the complete 6-digit OTP");
+    return;
+  }
  
-showMessage("✅ Registration Successful! Redirecting...","success");
+  const btn = document.getElementById("verifyOtpBtn");
+  btn.disabled  = true;
+  btn.innerHTML = "Verifying...";
  
-setTimeout(()=>{
-window.location.href="login.html";
-},1200);
+  try{
+    const res  = await fetch("http://localhost:5000/verify-otp", {
+      method:  "POST",
+      headers: {"Content-Type":"application/json"},
+      body:    JSON.stringify({ email: pendingEmail, otp })
+    });
+    const data = await res.json();
  
-}else{
+    if(res.ok){
+      clearInterval(timerInterval);
+      // Close modal, show success, redirect
+      bootstrap.Modal.getInstance(document.getElementById("otpModal")).hide();
+      showMessage("✅ Account created successfully! Redirecting...","success");
+      setTimeout(()=>{ window.location.href = "login.html"; }, 1500);
+    } else {
+      showOtpMessage("❌ " + data.message);
+      clearOtpBoxes();
+    }
+  } catch {
+    showOtpMessage("❌ Server not reachable");
+  }
  
-showMessage("❌ "+data.message);
- 
+  btn.disabled  = false;
+  btn.innerHTML = "Verify & Create Account";
 }
  
-}catch{
- 
-showMessage("❌ Server error");
- 
+// ── Back to form ──
+function backToForm(){
+  clearInterval(timerInterval);
+  bootstrap.Modal.getInstance(document.getElementById("otpModal")).hide();
+  // Pre-fill email so user can correct it
+  pendingEmail = "";
 }
+async function resendOtp(){
+  if(!pendingEmail) return;
+  const fullName = document.getElementById("fullName").value.trim();
+  const password = document.getElementById("password").value;
  
-signupBtn.disabled=false;
-signupBtn.innerHTML="Create Account";
+  const btn = document.getElementById("resendBtn");
+  btn.disabled  = true;
+  btn.innerHTML = "Sending...";
  
-});
+  try{
+    const res = await fetch("http://localhost:5000/send-otp",{
+      method:  "POST",
+      headers: {"Content-Type":"application/json"},
+      body:    JSON.stringify({ full_name: fullName, email: pendingEmail, password })
+    });
+    const data = await res.json();
+    if(res.ok){
+      hideOtpMessage();
+      clearOtpBoxes();
+      startTimer();
+      showOtpMessage("✅ New OTP sent to your email","success");
+    } else {
+      showOtpMessage("❌ " + data.message);
+      btn.disabled = false;
+    }
+  } catch {
+    showOtpMessage("❌ Server not reachable");
+    btn.disabled = false;
+  }
+ 
+  btn.innerHTML = "Resend OTP";
+}
  
 </script>
  
