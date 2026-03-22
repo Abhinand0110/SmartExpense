@@ -7,10 +7,10 @@ import random
 import threading
 from email.mime.text import MIMEText
 from datetime import datetime, date, timedelta
- 
+
 app = Flask(__name__)
 CORS(app)
- 
+
 def get_db():
     return mysql.connector.connect(
         host="localhost",
@@ -18,31 +18,31 @@ def get_db():
         password="Abhiroot@123",
         database="smartexpense"
     )
- 
+
 print("✅ SmartExpense backend ready")
- 
+
 def is_valid_email(email):
     return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email)
- 
+
 def is_strong_password(password):
     return re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$", password)
- 
+
 def month_label(yr, mo):
     return datetime(int(yr), int(mo), 1).strftime("%b %Y")
- 
+
 def month_key(yr, mo):
     return f"{int(yr):04d}-{int(mo):02d}"
- 
- 
+
+
 @app.get("/")
 def home():
     return "SmartExpense backend running"
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # AUTH
 # ════════════════════════════════════════════════════════
- 
+
 @app.get("/check-email")
 def check_email():
     email = request.args.get("email")
@@ -51,7 +51,7 @@ def check_email():
     user = cursor.fetchone()
     cursor.close(); db.close()
     return jsonify({"exists": bool(user)})
- 
+
 @app.post("/register")
 def register():
     data = request.get_json()
@@ -71,28 +71,28 @@ def register():
         return jsonify({"message": "Database error"}), 500
     finally:
         cursor.close(); db.close()
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # OTP — in-memory store {email: {otp, expiry, full_name, password}}
 # ════════════════════════════════════════════════════════
- 
+
 import random
 from datetime import timedelta
- 
+
 otp_store = {}   # temporary in-memory OTP storage
- 
+
 def send_otp_email(to_email, otp):
     """Send OTP email in background thread."""
     try:
         body = f"""Hi,
- 
+
 Your SmartExpense verification code is:
- 
+
   {otp}
- 
+
 This OTP is valid for 5 minutes. Do not share it with anyone.
- 
+
 — SmartExpense Team"""
         msg = MIMEText(body)
         msg["Subject"] = "SmartExpense – Email Verification OTP"
@@ -106,7 +106,7 @@ This OTP is valid for 5 minutes. Do not share it with anyone.
         print(f"✅ OTP sent to {to_email}")
     except Exception as e:
         print("OTP email error:", e)
- 
+
 @app.post("/send-otp")
 def send_otp():
     """Generate OTP, store it, send to email — does NOT create user yet."""
@@ -114,10 +114,10 @@ def send_otp():
     full_name = data.get("full_name", "")
     email     = data.get("email", "")
     password  = data.get("password", "")
- 
+
     if not email:
         return jsonify({"message": "Email required"}), 400
- 
+
     # Check if email already exists
     db = get_db(); cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT id FROM users WHERE email=%s LIMIT 1", (email,))
@@ -125,11 +125,11 @@ def send_otp():
     cursor.close(); db.close()
     if existing:
         return jsonify({"message": "Email already registered"}), 400
- 
+
     # Generate 6-digit OTP
     otp    = str(random.randint(100000, 999999))
     expiry = datetime.now() + timedelta(minutes=5)
- 
+
     # Store in memory
     otp_store[email] = {
         "otp":       otp,
@@ -137,36 +137,36 @@ def send_otp():
         "full_name": full_name,
         "password":  password
     }
- 
+
     # Send email in background (non-blocking)
     thread = threading.Thread(target=send_otp_email, args=(email, otp))
     thread.daemon = True
     thread.start()
- 
+
     return jsonify({"message": "OTP sent successfully"}), 200
- 
- 
+
+
 @app.post("/verify-otp")
 def verify_otp():
     """Verify OTP — if correct, create the user account."""
     data  = request.get_json()
     email = data.get("email", "")
     otp   = data.get("otp", "")
- 
+
     if email not in otp_store:
         return jsonify({"message": "OTP expired or not requested. Please try again."}), 400
- 
+
     record = otp_store[email]
- 
+
     # Check expiry
     if datetime.now() > record["expiry"]:
         del otp_store[email]
         return jsonify({"message": "OTP has expired. Please register again."}), 400
- 
+
     # Check OTP value
     if otp != record["otp"]:
         return jsonify({"message": "Incorrect OTP. Please try again."}), 400
- 
+
     # ✅ OTP correct — create user
     db = get_db(); cursor = db.cursor(dictionary=True)
     try:
@@ -183,48 +183,48 @@ def verify_otp():
         return jsonify({"message": "Database error"}), 500
     finally:
         cursor.close(); db.close()
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # FORGOT PASSWORD — OTP stored separately
 # ════════════════════════════════════════════════════════
- 
+
 forgot_otp_store = {}  # {email: {otp, expiry}}
- 
+
 @app.post("/forgot-password-otp")
 def forgot_password_otp():
     """Check email exists, generate OTP, send it."""
     data  = request.get_json()
     email = data.get("email", "").strip()
- 
+
     if not email:
         return jsonify({"message": "Email required"}), 400
- 
+
     # Check if email is registered
     db = get_db(); cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT id FROM users WHERE email=%s LIMIT 1", (email,))
     user = cursor.fetchone()
     cursor.close(); db.close()
- 
+
     if not user:
         return jsonify({"message": "No account found with this email"}), 404
- 
+
     # Generate OTP
     otp    = str(random.randint(100000, 999999))
     expiry = datetime.now() + timedelta(minutes=5)
     forgot_otp_store[email] = {"otp": otp, "expiry": expiry}
- 
+
     # Send OTP email in background
     def send_forgot_otp(to_email, otp_code):
         try:
             body = f"""Hi,
- 
+
 You requested a password reset for your SmartExpense account.
- 
+
 Your OTP is:  {otp_code}
- 
+
 This OTP is valid for 5 minutes. If you did not request this, ignore this email.
- 
+
 — SmartExpense Team"""
             msg = MIMEText(body)
             msg["Subject"] = "SmartExpense – Password Reset OTP"
@@ -238,51 +238,51 @@ This OTP is valid for 5 minutes. If you did not request this, ignore this email.
             print(f"✅ Forgot password OTP sent to {to_email}")
         except Exception as e:
             print("Forgot OTP email error:", e)
- 
+
     thread = threading.Thread(target=send_forgot_otp, args=(email, otp))
     thread.daemon = True
     thread.start()
- 
+
     return jsonify({"message": "OTP sent to your email"}), 200
- 
- 
+
+
 @app.post("/verify-forgot-otp")
 def verify_forgot_otp():
     """Verify the forgot-password OTP — returns success so frontend can show new password form."""
     data  = request.get_json()
     email = data.get("email", "")
     otp   = data.get("otp", "")
- 
+
     if email not in forgot_otp_store:
         return jsonify({"message": "OTP expired or not requested. Please try again."}), 400
- 
+
     record = forgot_otp_store[email]
- 
+
     if datetime.now() > record["expiry"]:
         del forgot_otp_store[email]
         return jsonify({"message": "OTP has expired. Please try again."}), 400
- 
+
     if otp != record["otp"]:
         return jsonify({"message": "Incorrect OTP. Please try again."}), 400
- 
+
     # ✅ OTP correct — don't delete yet, mark as verified
     forgot_otp_store[email]["verified"] = True
     return jsonify({"message": "OTP verified"}), 200
- 
- 
+
+
 @app.post("/reset-password")
 def reset_password():
     """Reset password — only allowed if OTP was verified."""
     data         = request.get_json()
     email        = data.get("email", "")
     new_password = data.get("new_password", "")
- 
+
     if not is_strong_password(new_password):
         return jsonify({"message": "Password is too weak"}), 400
- 
+
     if email not in forgot_otp_store or not forgot_otp_store[email].get("verified"):
         return jsonify({"message": "OTP not verified. Please verify OTP first."}), 403
- 
+
     db = get_db(); cursor = db.cursor(dictionary=True)
     try:
         cursor.execute("UPDATE users SET password=%s WHERE email=%s", (new_password, email))
@@ -293,7 +293,7 @@ def reset_password():
         return jsonify({"message": str(e)}), 500
     finally:
         cursor.close(); db.close()
- 
+
 @app.post("/login")
 def login():
     data = request.get_json()
@@ -305,7 +305,7 @@ def login():
     if not user or password != user["password"]:
         return jsonify({"message": "Invalid email or password"}), 401
     return jsonify({"message": "Login success", "user": {"id": user["id"], "name": user["full_name"], "email": user["email"]}})
- 
+
 @app.get("/profile/<int:user_id>")
 def get_profile(user_id):
     db = get_db(); cursor = db.cursor(dictionary=True)
@@ -314,7 +314,7 @@ def get_profile(user_id):
     cursor.close(); db.close()
     if not user: return jsonify({"message": "User not found"}), 404
     return jsonify(user)
- 
+
 @app.post("/update-profile")
 def update_profile():
     data = request.get_json()
@@ -322,12 +322,12 @@ def update_profile():
     cursor.execute("UPDATE users SET full_name=%s, password=%s WHERE id=%s", (data["name"], data["password"], data["user_id"]))
     db.commit(); cursor.close(); db.close()
     return jsonify({"message": "Profile updated"})
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # INCOME
 # ════════════════════════════════════════════════════════
- 
+
 @app.post("/add-income")
 def add_income():
     data = request.get_json()
@@ -341,7 +341,7 @@ def add_income():
         return jsonify({"message": str(err)}), 500
     finally:
         cursor.close(); db.close()
- 
+
 @app.get("/get-income/<int:user_id>")
 def get_income(user_id):
     db = get_db(); cursor = db.cursor(dictionary=True)
@@ -350,19 +350,19 @@ def get_income(user_id):
     for r in rows:
         if r.get("income_date"): r["income_date"] = str(r["income_date"])
     return jsonify(rows)
- 
+
 @app.delete("/delete-income/<int:income_id>")
 def delete_income(income_id):
     db = get_db(); cursor = db.cursor(dictionary=True)
     cursor.execute("DELETE FROM income WHERE id=%s", (income_id,))
     db.commit(); cursor.close(); db.close()
     return jsonify({"message": "Income deleted"})
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # EXPENSES
 # ════════════════════════════════════════════════════════
- 
+
 @app.post("/add-expense")
 def add_expense():
     data = request.get_json()
@@ -376,7 +376,7 @@ def add_expense():
         return jsonify({"message": str(err)}), 500
     finally:
         cursor.close(); db.close()
- 
+
 @app.get("/get-expenses/<int:user_id>")
 def get_expenses(user_id):
     db = get_db(); cursor = db.cursor(dictionary=True)
@@ -386,19 +386,19 @@ def get_expenses(user_id):
         if r.get("expense_date"): r["expense_date"] = str(r["expense_date"])
         if r.get("created_at"):   r["created_at"]   = str(r["created_at"])
     return jsonify(rows)
- 
+
 @app.delete("/delete-expense/<int:expense_id>")
 def delete_expense(expense_id):
     db = get_db(); cursor = db.cursor(dictionary=True)
     cursor.execute("DELETE FROM expenses WHERE id=%s", (expense_id,))
     db.commit(); cursor.close(); db.close()
     return jsonify({"message": "Expense deleted"})
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # COMPARISON
 # ════════════════════════════════════════════════════════
- 
+
 @app.post("/save-comparison")
 def save_comparison():
     data = request.get_json()
@@ -417,12 +417,12 @@ def save_comparison():
         return jsonify({"total_income": total_income, "total_expense": total_expense, "savings": savings})
     finally:
         cursor.close(); db.close()
- 
- 
+
+
 # ════════════════════════════════════════════════════════
 # ⚡ DASHBOARD — granularity-aware (daily or monthly)
 # ════════════════════════════════════════════════════════
- 
+
 @app.get("/dashboard-data")
 def dashboard_data():
     user_id     = request.args.get("user_id", type=int)
@@ -430,33 +430,33 @@ def dashboard_data():
     end_date    = request.args.get("end_date")
     category    = request.args.get("category", "all")
     granularity = request.args.get("granularity", "monthly")  # "daily" or "monthly"
- 
+
     if not user_id:
         return jsonify({"message": "user_id required"}), 400
- 
+
     today = date.today()
     if not start_date: start_date = today.replace(day=1).strftime("%Y-%m-%d")
     if not end_date:   end_date   = today.strftime("%Y-%m-%d")
- 
+
     db = get_db(); cursor = db.cursor(dictionary=True)
     try:
         # ── Totals ──
         cursor.execute("SELECT COALESCE(SUM(amount),0) AS total FROM income WHERE user_id=%s AND income_date BETWEEN %s AND %s", (user_id, start_date, end_date))
         total_income = float(cursor.fetchone()["total"])
- 
+
         if category != "all":
             cursor.execute("SELECT COALESCE(SUM(amount),0) AS total FROM expenses WHERE user_id=%s AND expense_date BETWEEN %s AND %s AND category=%s", (user_id, start_date, end_date, category))
         else:
             cursor.execute("SELECT COALESCE(SUM(amount),0) AS total FROM expenses WHERE user_id=%s AND expense_date BETWEEN %s AND %s", (user_id, start_date, end_date))
         total_expense = float(cursor.fetchone()["total"])
         balance = total_income - total_expense
- 
+
         # ── Category breakdown ──
         cursor.execute("""SELECT category, COALESCE(SUM(amount),0) AS amount FROM expenses
                WHERE user_id=%s AND expense_date BETWEEN %s AND %s
                GROUP BY category ORDER BY amount DESC""", (user_id, start_date, end_date))
         category_expense = [{"category": r["category"], "amount": float(r["amount"])} for r in cursor.fetchall()]
- 
+
         # ── Trend data: DAILY if granularity=daily, else MONTHLY ──
         # ✅ Build category clause so trend respects the category filter
         if category != "all":
@@ -465,7 +465,7 @@ def dashboard_data():
         else:
             cat_clause        = "user_id=%s AND expense_date BETWEEN %s AND %s"
             cat_params_base   = (user_id, start_date, end_date)
- 
+
         if granularity == "daily":
             cursor.execute(f"""SELECT expense_date AS day_key, COALESCE(SUM(amount),0) AS amount
                    FROM expenses WHERE {cat_clause}
@@ -475,7 +475,7 @@ def dashboard_data():
                 d = r["day_key"]
                 label = (d.strftime("%d %b") if hasattr(d, 'strftime') else datetime.strptime(str(d), "%Y-%m-%d").strftime("%d %b"))
                 monthly_expense.append({"month": label, "amount": float(r["amount"])})
- 
+
             # Daily income vs expense
             cursor.execute("""SELECT income_date AS day_key, COALESCE(SUM(amount),0) AS income
                    FROM income WHERE user_id=%s AND income_date BETWEEN %s AND %s
@@ -486,7 +486,7 @@ def dashboard_data():
                 label = (d.strftime("%d %b") if hasattr(d, 'strftime') else datetime.strptime(str(d), "%Y-%m-%d").strftime("%d %b"))
                 key   = str(d)
                 ive[key] = {"month": label, "income": float(r["income"]), "expense": 0.0}
- 
+
             cursor.execute("""SELECT expense_date AS day_key, COALESCE(SUM(amount),0) AS expense
                    FROM expenses WHERE user_id=%s AND expense_date BETWEEN %s AND %s
                    GROUP BY expense_date ORDER BY expense_date""", (user_id, start_date, end_date))
@@ -498,14 +498,14 @@ def dashboard_data():
                     ive[key]["expense"] = float(r["expense"])
                 else:
                     ive[key] = {"month": label, "income": 0.0, "expense": float(r["expense"])}
- 
+
         else:
             # Monthly expense trend (respects category filter)
             cursor.execute(f"""SELECT YEAR(expense_date) AS yr, MONTH(expense_date) AS mo, COALESCE(SUM(amount),0) AS amount
                    FROM expenses WHERE {cat_clause}
                    GROUP BY YEAR(expense_date), MONTH(expense_date) ORDER BY yr, mo""", cat_params_base)
             monthly_expense = [{"month": month_label(r["yr"], r["mo"]), "amount": float(r["amount"])} for r in cursor.fetchall()]
- 
+
             cursor.execute("""SELECT YEAR(income_date) AS yr, MONTH(income_date) AS mo, COALESCE(SUM(amount),0) AS income
                    FROM income WHERE user_id=%s AND income_date BETWEEN %s AND %s
                    GROUP BY YEAR(income_date), MONTH(income_date) ORDER BY yr, mo""", (user_id, start_date, end_date))
@@ -513,7 +513,7 @@ def dashboard_data():
             for r in cursor.fetchall():
                 k = month_key(r["yr"], r["mo"])
                 ive[k] = {"month": month_label(r["yr"], r["mo"]), "income": float(r["income"]), "expense": 0.0}
- 
+
             cursor.execute("""SELECT YEAR(expense_date) AS yr, MONTH(expense_date) AS mo, COALESCE(SUM(amount),0) AS expense
                    FROM expenses WHERE user_id=%s AND expense_date BETWEEN %s AND %s
                    GROUP BY YEAR(expense_date), MONTH(expense_date) ORDER BY yr, mo""", (user_id, start_date, end_date))
@@ -523,34 +523,34 @@ def dashboard_data():
                     ive[k]["expense"] = float(r["expense"])
                 else:
                     ive[k] = {"month": month_label(r["yr"], r["mo"]), "income": 0.0, "expense": float(r["expense"])}
- 
+
         income_vs_expense = [ive[k] for k in sorted(ive.keys())]
- 
+
         # ── Income by source (for when user filters by Income only) ──
         cursor.execute("""SELECT source, COALESCE(SUM(amount),0) AS amount
                FROM income WHERE user_id=%s AND income_date BETWEEN %s AND %s
                GROUP BY source ORDER BY amount DESC""", (user_id, start_date, end_date))
         income_by_source = [{"category": r["source"], "amount": float(r["amount"])} for r in cursor.fetchall()]
- 
+
         # ── Top 5 categories ──
         cursor.execute("""SELECT category, COALESCE(SUM(amount),0) AS amount FROM expenses
                WHERE user_id=%s AND expense_date BETWEEN %s AND %s
                GROUP BY category ORDER BY amount DESC LIMIT 5""", (user_id, start_date, end_date))
         top_categories = [{"category": r["category"], "amount": float(r["amount"])} for r in cursor.fetchall()]
- 
+
         # ── Recent transactions ──
         cursor.execute("""SELECT 'income' AS type, source AS title, source AS category, amount, income_date AS tx_date
                FROM income WHERE user_id=%s AND income_date BETWEEN %s AND %s ORDER BY income_date DESC LIMIT 5""", (user_id, start_date, end_date))
         recent = [{"type":"income","title":r["title"],"category":r["category"],"amount":float(r["amount"]),"tx_date":str(r["tx_date"])} for r in cursor.fetchall()]
- 
+
         cursor.execute("""SELECT 'expense' AS type, COALESCE(title,'') AS title, category, amount, expense_date AS tx_date
                FROM expenses WHERE user_id=%s AND expense_date BETWEEN %s AND %s ORDER BY expense_date DESC LIMIT 5""", (user_id, start_date, end_date))
         for r in cursor.fetchall():
             recent.append({"type":"expense","title":r["title"],"category":r["category"],"amount":float(r["amount"]),"tx_date":str(r["tx_date"])})
- 
+
         recent.sort(key=lambda x: x["tx_date"], reverse=True)
         recent = recent[:10]
- 
+
         return jsonify({
             "balance": balance, "total_income": total_income, "total_expense": total_expense,
             "category_expense": category_expense, "income_by_source": income_by_source,
@@ -558,20 +558,133 @@ def dashboard_data():
             "income_vs_expense": income_vs_expense, "top_categories": top_categories,
             "recent": recent, "granularity": granularity
         })
- 
+
     except Exception as e:
         print("Dashboard error:", e)
         return jsonify({"message": str(e)}), 500
     finally:
         cursor.close(); db.close()
- 
- 
+
+
+# ════════════════════════════════════════════════════════
+# AI ASSISTANT — Groq API (FREE — console.groq.com)
+# ════════════════════════════════════════════════════════
+
+import urllib.request
+import json as json_lib
+
+GROQ_API_KEY = "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"
+
+@app.post("/ai-summary")
+def ai_summary():
+    data     = request.get_json()
+    user_id  = data.get("user_id")
+    question = data.get("question", "Summarize my finances")
+    context  = data.get("context", {})
+
+    if not user_id:
+        return jsonify({"message": "user_id required"}), 400
+
+    total_income  = context.get("total_income", 0)
+    total_expense = context.get("total_expense", 0)
+    savings       = total_income - total_expense
+    savings_rate  = round((savings / total_income * 100), 1) if total_income > 0 else 0
+    top_cats      = context.get("top_categories", [])
+    recent        = context.get("recent", [])
+    period        = context.get("period", "this period")
+
+    top_cats_text = "\n".join([f"  - {c['category']}: Rs.{c['amount']:,.0f}" for c in top_cats]) or "  No expense data"
+    recent_text   = "\n".join([f"  - {r['tx_date']} | {r['type'].title()} | {r['category']} | Rs.{r['amount']:,.0f}" for r in recent[:5]]) or "  No recent transactions"
+
+    system_prompt = """You are a friendly and smart personal finance assistant for SmartExpense, an Indian expense tracking app.
+You help users understand their spending habits, savings, and give practical financial advice.
+Always use Rs. (Indian Rupee) for currency. Be concise, warm, and actionable.
+Keep responses under 150 words unless the user asks for details. Use bullet points when helpful."""
+
+    user_prompt = f"""Here is the financial data for the user (period: {period}):
+
+- Total Income:  Rs.{total_income:,.0f}
+- Total Expense: Rs.{total_expense:,.0f}
+- Net Savings:   Rs.{savings:,.0f}
+- Savings Rate:  {savings_rate}%
+
+Top Spending Categories:
+{top_cats_text}
+
+Recent Transactions:
+{recent_text}
+
+User question: "{question}"
+
+Please answer helpfully based on the data above."""
+
+    try:
+        import requests as req_lib
+        resp = req_lib.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type":  "application/json"
+            },
+            json={
+                "model": "llama-3.1-8b-instant",
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt}
+                ],
+                "max_tokens": 400,
+                "temperature": 0.7
+            },
+            timeout=30
+        )
+        print("Groq status:", resp.status_code)
+
+        if resp.status_code == 200:
+            reply = resp.json()["choices"][0]["message"]["content"]
+            return jsonify({"reply": reply}), 200
+        else:
+            print("Groq error:", resp.text)
+            return jsonify({"message": f"AI error: {resp.text[:200]}"}), 500
+
+    except ImportError:
+        # fallback urllib if requests not installed
+        try:
+            payload = json_lib.dumps({
+                "model": "llama-3.1-8b-instant",
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt}
+                ],
+                "max_tokens": 400,
+                "temperature": 0.7
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                "https://api.groq.com/openai/v1/chat/completions",
+                data=payload,
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type":  "application/json"
+                },
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=30) as r:
+                result = json_lib.loads(r.read().decode("utf-8"))
+                reply  = result["choices"][0]["message"]["content"]
+                return jsonify({"reply": reply}), 200
+        except Exception as e:
+            print("urllib AI error:", e)
+            return jsonify({"message": "AI service unavailable."}), 500
+    except Exception as e:
+        print("Groq AI error:", e)
+        return jsonify({"message": "AI service unavailable."}), 500
+
+
 # ════════════════════════════════════════════════════════
 # FEEDBACK
 # ════════════════════════════════════════════════════════
- 
+
 import threading
- 
+
 def send_email_background(category, rating, message):
     """Send email in background thread — does not block the response."""
     try:
@@ -588,7 +701,7 @@ def send_email_background(category, rating, message):
         print("✅ Feedback email sent")
     except Exception as e:
         print("Email error:", e)
- 
+
 @app.post("/send-feedback")
 def send_feedback():
     data     = request.get_json()
@@ -596,7 +709,7 @@ def send_feedback():
     category = data.get("category", "General")
     rating   = data.get("rating", 0)
     message  = data.get("message", "")
- 
+
     # ✅ Step 1: Save to DB immediately (instant)
     try:
         db = get_db(); cursor = db.cursor(dictionary=True)
@@ -609,16 +722,15 @@ def send_feedback():
     except Exception as e:
         print("DB error:", e)
         return jsonify({"message": "Failed to save feedback"}), 500
- 
+
     # ✅ Step 2: Send email in background (non-blocking)
     thread = threading.Thread(target=send_email_background, args=(category, rating, message))
     thread.daemon = True
     thread.start()
- 
+
     # ✅ Return instantly without waiting for email
     return jsonify({"message": "Feedback submitted successfully"}), 200
- 
- 
+
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
- 
