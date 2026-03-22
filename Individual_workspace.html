@@ -103,7 +103,7 @@
     .empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:.875rem; }
     .empty .empty-icon { font-size:2.5rem; margin-bottom:10px; }
     .loading { text-align:center; padding:24px; color:var(--text3); font-size:.875rem; }
- 
+
     /* ── DASHBOARD ── */
     .dash-kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
     .dash-kpi {
@@ -146,14 +146,14 @@
     .dash-chart-title .cdot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
     .dash-chart-wrap { position:relative; height:220px; }
     .dash-table-card { background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; }
- 
+
     @media(max-width:1024px) { .dash-charts-grid { grid-template-columns:1fr; } }
     @media(max-width:900px)  { aside{display:none} .dash-kpi-grid{grid-template-columns:1fr 1fr} .grid-2{grid-template-columns:1fr} }
     @media(max-width:600px)  { main{padding:16px} .dash-kpi-grid{grid-template-columns:1fr} .form-grid{grid-template-columns:1fr} .filter-bar{flex-direction:column;align-items:flex-start} }
   </style>
 </head>
 <body>
- 
+
 <nav>
   <span class="nav-brand">SmartExpense</span>
   <div class="nav-right">
@@ -161,7 +161,7 @@
     <div class="nav-user" id="navInitial" onclick="location.href='profile.html'" title="Profile">U</div>
   </div>
 </nav>
- 
+
 <div class="layout">
   <aside>
     <div class="sidebar-label">Workspace</div>
@@ -170,17 +170,31 @@
     <button class="sidebar-item" onclick="showPage('expense',this)"><span class="icon">💸</span> Manage Expense</button>
     <button class="sidebar-item" onclick="showPage('transactions',this)"><span class="icon">📋</span> Transactions</button>
     <button class="sidebar-item" onclick="showPage('compare',this)"><span class="icon">📈</span> Compare</button>
+    <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border);margin-top:16px">
+      <button onclick="location.href='ai_assistant.html'" style="
+        display:flex; align-items:center; gap:10px;
+        width:100%; padding:11px 14px; border:none; border-radius:10px;
+        background:linear-gradient(135deg,#6366f1,#8b5cf6);
+        color:#fff; font-size:.875rem; font-weight:600;
+        font-family:inherit; cursor:pointer;
+        box-shadow:0 4px 14px rgba(99,102,241,0.35);
+        transition:all .2s;
+      " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(99,102,241,0.45)'"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 14px rgba(99,102,241,0.35)'">
+        <span style="font-size:1rem">✨</span> Smart AI Advisor
+      </button>
+    </div>
   </aside>
- 
+
   <main>
- 
+
     <!-- ══════════ DASHBOARD ══════════ -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
         <h1>Dashboard</h1>
         <p id="dash-subtitle">Your financial overview at a glance</p>
       </div>
- 
+
       <div class="dash-kpi-grid">
         <div class="dash-kpi savings">
           <div class="dash-kpi-label">Total Savings</div>
@@ -198,7 +212,7 @@
           <div class="dash-kpi-sub" id="d-expense-sub">—</div>
         </div>
       </div>
- 
+
       <div class="filter-bar">
         <div class="filter-group">
           <span class="filter-label">Period</span>
@@ -232,7 +246,7 @@
         <input type="hidden" id="f-type" value="all"/>
         <span class="filter-period-tag" id="f-period-tag">—</span>
       </div>
- 
+
       <!-- 4 Charts with DYNAMIC titles -->
       <div class="dash-charts-grid">
         <div class="dash-chart-card">
@@ -252,7 +266,7 @@
           <div class="dash-chart-wrap"><canvas id="c-hbar"></canvas></div>
         </div>
       </div>
- 
+
       <div class="dash-table-card">
         <div class="dash-chart-title" style="margin-bottom:14px">
           <span class="cdot" style="background:var(--green)"></span>
@@ -261,11 +275,11 @@
         <div class="table-wrap" id="d-recent"><div class="loading">Loading...</div></div>
       </div>
     </div>
- 
+
     <!-- ══════════ ADD INCOME ══════════ -->
     <div class="page" id="page-income">
       <div class="page-header"><h1>Manage Income</h1><p>Track and record your income entries</p></div>
- 
+
       <!-- Income KPIs -->
       <div class="dash-kpi-grid" style="margin-bottom:20px">
         <div class="dash-kpi income">
@@ -279,7 +293,7 @@
           <div class="dash-kpi-sub" id="inc-kpi-top-amount">—</div>
         </div>
         <div class="dash-kpi" style="border-color:var(--yellow)">
-          <div class="dash-kpi-label">Latest Income</div>
+          <div class="dash-kpi-label">This Month</div>
           <div class="dash-kpi-val" id="inc-kpi-latest" style="color:var(--yellow);font-size:1.3rem">—</div>
           <div class="dash-kpi-sub" id="inc-kpi-latest-date">—</div>
         </div>
@@ -308,11 +322,11 @@
         <div class="table-wrap" id="income-table-wrap"><div class="loading">Loading...</div></div>
       </div>
     </div>
- 
+
     <!-- ══════════ ADD EXPENSE ══════════ -->
     <div class="page" id="page-expense">
       <div class="page-header"><h1>Manage Expense</h1><p>Track and record your expense entries</p></div>
- 
+
       <!-- Expense KPIs -->
       <div class="dash-kpi-grid" style="margin-bottom:20px">
         <div class="dash-kpi expense">
@@ -326,7 +340,7 @@
           <div class="dash-kpi-sub" id="exp-kpi-top-amount">—</div>
         </div>
         <div class="dash-kpi" style="border-color:var(--yellow)">
-          <div class="dash-kpi-label">Latest Expense</div>
+          <div class="dash-kpi-label">This Month</div>
           <div class="dash-kpi-val" id="exp-kpi-latest" style="color:var(--yellow);font-size:1.3rem">—</div>
           <div class="dash-kpi-sub" id="exp-kpi-latest-date">—</div>
         </div>
@@ -354,7 +368,7 @@
         <div class="table-wrap" id="expense-table-wrap"><div class="loading">Loading...</div></div>
       </div>
     </div>
- 
+
     <!-- ══════════ TRANSACTIONS ══════════ -->
     <div class="page" id="page-transactions">
       <div class="page-header"><h1>All Transactions</h1><p>Combined income and expense history</p></div>
@@ -371,11 +385,11 @@
         <div class="table-wrap" id="all-transactions"><div class="loading">Loading...</div></div>
       </div>
     </div>
- 
+
     <!-- ══════════ COMPARE ══════════ -->
     <div class="page" id="page-compare">
       <div class="page-header"><h1>Compare</h1><p>Compare two months side by side</p></div>
- 
+
       <!-- Month selectors -->
       <div class="card" style="margin-bottom:20px">
         <div class="card-title"><span class="dot"></span>Select Two Months to Compare</div>
@@ -392,13 +406,13 @@
           <button class="btn btn-primary" onclick="runCompare()" style="margin-bottom:2px">Compare →</button>
         </div>
       </div>
- 
+
       <!-- Comparison results -->
       <div id="cmp-results-wrap" style="display:none">
- 
+
         <!-- Side by side KPI cards -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px">
- 
+
           <!-- Month 1 card -->
           <div class="card" style="border-top:4px solid var(--accent)">
             <div style="font-size:.85rem;font-weight:700;color:var(--accent);margin-bottom:16px;letter-spacing:.02em" id="cmp-m1-label">Month 1</div>
@@ -417,7 +431,7 @@
               </div>
             </div>
           </div>
- 
+
           <!-- Month 2 card -->
           <div class="card" style="border-top:4px solid var(--green)">
             <div style="font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:16px;letter-spacing:.02em" id="cmp-m2-label">Month 2</div>
@@ -437,7 +451,7 @@
             </div>
           </div>
         </div>
- 
+
         <!-- Change indicators -->
         <div class="card" style="margin-bottom:20px">
           <div class="card-title"><span class="dot" style="background:var(--yellow)"></span>Month-over-Month Change</div>
@@ -456,7 +470,7 @@
             </div>
           </div>
         </div>
- 
+
         <!-- Charts -->
         <div class="grid-2">
           <div class="card">
@@ -476,32 +490,32 @@
             <div class="chart-container"><canvas id="cmpPieChart2"></canvas></div>
           </div>
         </div>
- 
+
       </div>
- 
+
       <!-- Empty state before compare -->
       <div id="cmp-empty" style="text-align:center;padding:60px 20px;color:var(--text3)">
         <div style="font-size:3rem;margin-bottom:12px">📅</div>
         <div style="font-size:.95rem;font-weight:500">Select two months above and click Compare</div>
       </div>
- 
+
     </div>
- 
+
   </main>
 </div>
 <div class="toast" id="toast"></div>
- 
+
 <script>
   const BASE = "http://localhost:5000";
   let USER = JSON.parse(localStorage.getItem("smartexpense_user") || "null");
   let incomes = [], expenses = [];
- 
+
   if (USER) document.getElementById("navInitial").textContent = USER.name?.[0]?.toUpperCase() || "U";
- 
+
   const today     = new Date().toISOString().split("T")[0];
   const thisMonth = today.slice(0,7);
   const thisYear  = today.slice(0,4);
- 
+
   document.getElementById("inc-date").value     = today;
   document.getElementById("exp-date").value     = today;
   document.getElementById("cmp-month1").value   = thisMonth;
@@ -511,7 +525,7 @@
   document.getElementById("filter-month").value = thisMonth;
   document.getElementById("f-start").value      = thisYear + "-01-01";
   document.getElementById("f-end").value        = today;
- 
+
   const fmt = n => "₹" + Number(n).toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:0});
   function showToast(msg, type="success") {
     const t=document.getElementById("toast"); t.textContent=msg; t.className=`toast ${type} show`;
@@ -520,7 +534,7 @@
   function emptyState(msg="No records found") {
     return `<div class="empty"><div class="empty-icon">📭</div>${msg}</div>`;
   }
- 
+
   function showPage(name, el) {
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.querySelectorAll(".sidebar-item").forEach(b=>b.classList.remove("active"));
@@ -531,29 +545,29 @@
     if (name==="transactions") loadAll().then(renderTransactions);
     if (name==="compare")      loadAll().then(renderCompareCharts);
   }
- 
+
   // ── Period → granularity + date range ──
   // ✅ KEY FIX: never use "today" as end for open-ended periods.
   // Some entries may have future dates (e.g. April salary entered early).
   // Use "2099-12-31" so ALL data is always included.
   const FAR_FUTURE = "2099-12-31";
- 
+
   function getPeriodConfig() {
     const period = document.getElementById("f-period").value;
     const now    = new Date();
     let start, end, label = "", granularity = "monthly";
- 
+
     if (period === "all_time") {
       start = "2000-01-01"; end = FAR_FUTURE; label = "All Time"; granularity = "monthly";
- 
+
     } else if (period === "today") {
       start = today; end = today; label = "Today"; granularity = "daily";
- 
+
     } else if (period === "last7") {
       const d = new Date(); d.setDate(d.getDate()-6);
       start = d.toISOString().split("T")[0]; end = today;
       label = "Last 7 Days"; granularity = "daily";
- 
+
     } else if (period === "this_month") {
       const mo = String(now.getMonth()+1).padStart(2,"0");
       start = thisYear + "-" + mo + "-01";
@@ -562,7 +576,7 @@
       end = lastDay.toISOString().split("T")[0];
       label = now.toLocaleString("default",{month:"long",year:"numeric"});
       granularity = "daily";
- 
+
     } else if (period === "last_month") {
       const d = new Date(now.getFullYear(), now.getMonth()-1, 1);
       start = d.toISOString().split("T")[0];
@@ -570,13 +584,13 @@
       end   = e.toISOString().split("T")[0];
       label = d.toLocaleString("default",{month:"long",year:"numeric"});
       granularity = "daily";
- 
+
     } else if (period === "this_year") {
       start = thisYear + "-01-01";
       end   = thisYear + "-12-31"; // ✅ full year, includes future-dated entries
       label = "Year " + thisYear;
       granularity = "monthly";
- 
+
     } else if (period === "custom") {
       start = document.getElementById("f-start").value || thisYear+"-01-01";
       end   = document.getElementById("f-end").value   || FAR_FUTURE;
@@ -584,16 +598,16 @@
       const diffDays = (new Date(end) - new Date(start)) / (1000*60*60*24);
       granularity = diffDays <= 31 ? "daily" : "monthly";
     }
- 
+
     return { start, end, label, granularity };
   }
- 
+
   function onPeriodChange() {
     const isCustom = document.getElementById("f-period").value === "custom";
     document.getElementById("custom-wrap").classList.toggle("show", isCustom);
     if (!isCustom) loadDashboard();
   }
- 
+
       // ── Dynamic chart titles based on granularity ──
       function updateChartTitles(granularity, label, cat, type) {
         const g = granularity === "daily" ? "Daily" : "Monthly";
@@ -607,30 +621,30 @@
         document.getElementById("title-hbar").textContent  = "Top Spending Categories";
         document.getElementById("title-recent").textContent = "Recent Transactions";
       }
- 
+
   // ═══════════════════════════════════════
   // ⚡ DASHBOARD
   // ═══════════════════════════════════════
   let pieInst, lineInst, barInst, hbarInst;
   const COLORS = ["#6366f1","#10b981","#ef4444","#f59e0b","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316","#84cc16"];
- 
+
   async function loadDashboard() {
     if (!USER) return;
- 
+
     const { start, end, label, granularity } = getPeriodConfig();
     const cat  = document.getElementById("f-category").value;
     const type = document.getElementById("f-type").value;
- 
+
     document.getElementById("f-period-tag").textContent  = label;
     document.getElementById("dash-subtitle").textContent = `Showing: ${start} → ${end}`;
     updateChartTitles(granularity, label, cat, type);
- 
+
     try {
       const url = `${BASE}/dashboard-data?user_id=${USER.id}&start_date=${start}&end_date=${end}&category=${encodeURIComponent(cat)}&granularity=${granularity}`;
       const res  = await fetch(url);
       if (!res.ok) { const e=await res.json(); throw new Error(e.message||"Server error"); }
       const data = await res.json();
- 
+
       // KPIs
       const savings = data.total_income - data.total_expense;
       document.getElementById("d-savings").textContent      = fmt(savings);
@@ -643,34 +657,34 @@
       document.getElementById("d-expense-sub").textContent  = data.category_expense.length > 0
         ? data.category_expense.length + " categor" + (data.category_expense.length===1?"y":"ies")
         : "No expenses in period";
- 
+
       const showInc = type === "all" || type === "income";
       const showExp = type === "all" || type === "expense";
- 
+
       // ✅ Pie: show income sources when "Income only", else expense categories
       if (type === "income") {
         drawPie(data.income_by_source || []);
       } else {
         drawPie(showExp ? data.category_expense : []);
       }
- 
+
       drawLine(showExp ? data.monthly_expense : [], granularity);
       drawBar(data.income_vs_expense, showInc, showExp, granularity);
       drawHBar(showExp ? data.top_categories : []);
       renderRecentTable(data.recent, type);
- 
+
     } catch(e) {
       console.error("Dashboard error:", e);
       showToast("Dashboard error: " + e.message, "error");
     }
   }
- 
+
   const cOpts = {
     responsive:true, maintainAspectRatio:false,
     plugins:{ legend:{ labels:{ font:{family:"DM Sans",size:11}, boxWidth:10, padding:10 } } }
   };
   function dc(inst) { if (inst) { try { inst.destroy(); } catch(e){} } return null; }
- 
+
   function drawPie(data) {
     pieInst = dc(pieInst);
     const labels = data.map(d=>d.category), vals = data.map(d=>d.amount);
@@ -693,7 +707,7 @@
       }
     });
   }
- 
+
   function drawLine(data, granularity) {
     lineInst = dc(lineInst);
     lineInst = new Chart(document.getElementById("c-line").getContext("2d"), {
@@ -717,7 +731,7 @@
       }
     });
   }
- 
+
   function drawBar(data, showInc, showExp, granularity) {
     barInst = dc(barInst);
     const datasets = [];
@@ -735,7 +749,7 @@
       }
     });
   }
- 
+
   function drawHBar(data) {
     hbarInst = dc(hbarInst);
     hbarInst = new Chart(document.getElementById("c-hbar").getContext("2d"), {
@@ -754,7 +768,7 @@
       }
     });
   }
- 
+
   function renderRecentTable(rows, typeFilter) {
     let filtered = (rows||[]).filter(r => typeFilter==="all" || r.type===typeFilter);
     if (!filtered.length) { document.getElementById("d-recent").innerHTML=emptyState("No transactions in this period"); return; }
@@ -768,7 +782,7 @@
       </tr>`).join("")}
       </tbody></table>`;
   }
- 
+
   // ═══════════════════════════════════════
   // INCOME / EXPENSE
   // ═══════════════════════════════════════
@@ -783,7 +797,7 @@
     catch { showToast("Could not load expenses","error"); }
   }
   async function loadAll() { await Promise.all([loadIncomes(), loadExpenses()]); }
- 
+
   async function addIncome() {
     if (!USER) return showToast("Please log in first","error");
     const source=document.getElementById("inc-source").value;
@@ -801,7 +815,7 @@
       await loadIncomes(); renderIncomeTable(); loadDashboard();
     } catch { showToast("Server not reachable","error"); }
   }
- 
+
   async function addExpense() {
     if (!USER) return showToast("Please log in first","error");
     const category=document.getElementById("exp-category").value;
@@ -820,68 +834,66 @@
       await loadExpenses(); renderExpenseTable(); loadDashboard();
     } catch { showToast("Server not reachable","error"); }
   }
- 
+
   async function deleteIncome(id)  { await fetch(`${BASE}/delete-income/${id}`,{method:"DELETE"});  await loadIncomes();  renderIncomeTable();  loadDashboard(); showToast("Deleted","info"); }
   async function deleteExpense(id) { await fetch(`${BASE}/delete-expense/${id}`,{method:"DELETE"}); await loadExpenses(); renderExpenseTable(); loadDashboard(); showToast("Deleted","info"); }
- 
+
   function renderIncomeTable() {
     // ── Update Income KPIs ──
     const totalInc = incomes.reduce((s,r)=>s+parseFloat(r.amount),0);
     document.getElementById("inc-kpi-total").textContent   = fmt(totalInc);
     document.getElementById("inc-kpi-entries").textContent = incomes.length + " entr" + (incomes.length===1?"y":"ies") + " recorded";
- 
+
     // Top source
     const srcMap = {};
     incomes.forEach(r=>{ srcMap[r.source]=(srcMap[r.source]||0)+parseFloat(r.amount); });
     const topSrc = Object.entries(srcMap).sort((a,b)=>b[1]-a[1])[0];
     document.getElementById("inc-kpi-top-source").textContent = topSrc ? topSrc[0] : "—";
     document.getElementById("inc-kpi-top-amount").textContent = topSrc ? fmt(topSrc[1]) + " total" : "No income yet";
- 
-    // Latest income
-    if(incomes.length){
-      const latest = incomes[0]; // already sorted DESC
-      document.getElementById("inc-kpi-latest").textContent      = fmt(parseFloat(latest.amount));
-      document.getElementById("inc-kpi-latest-date").textContent = latest.income_date;
-    } else {
-      document.getElementById("inc-kpi-latest").textContent      = "—";
-      document.getElementById("inc-kpi-latest-date").textContent = "No income yet";
-    }
- 
+
+    // This Month income
+    const thisMonthStr = new Date().toISOString().slice(0,7);
+    const thisMonthInc = incomes.filter(r=>r.income_date && r.income_date.startsWith(thisMonthStr))
+                                .reduce((s,r)=>s+parseFloat(r.amount),0);
+    document.getElementById("inc-kpi-latest").textContent      = fmt(thisMonthInc);
+    document.getElementById("inc-kpi-latest-date").textContent = thisMonthInc > 0
+      ? new Date().toLocaleString("default",{month:"long",year:"numeric"})
+      : "No income this month";
+
     if(!incomes.length){document.getElementById("income-table-wrap").innerHTML=emptyState("No income recorded yet");return;}
     document.getElementById("income-table-wrap").innerHTML=`<table><thead><tr><th>Date</th><th>Source</th><th>Amount</th><th></th></tr></thead><tbody>
     ${incomes.map(r=>`<tr><td>${r.income_date}</td><td><span class="badge badge-income">Income</span> ${r.source}</td><td class="amount-income">+${fmt(r.amount)}</td><td><button onclick="deleteIncome(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td></tr>`).join("")}
     </tbody></table>`;
   }
- 
+
   function renderExpenseTable() {
     // ── Update Expense KPIs ──
     const totalExp = expenses.reduce((s,r)=>s+parseFloat(r.amount),0);
     document.getElementById("exp-kpi-total").textContent   = fmt(totalExp);
     document.getElementById("exp-kpi-entries").textContent = expenses.length + " entr" + (expenses.length===1?"y":"ies") + " recorded";
- 
+
     // Top category
     const catMap = {};
     expenses.forEach(r=>{ catMap[r.category]=(catMap[r.category]||0)+parseFloat(r.amount); });
     const topCat = Object.entries(catMap).sort((a,b)=>b[1]-a[1])[0];
     document.getElementById("exp-kpi-top-cat").textContent    = topCat ? topCat[0] : "—";
     document.getElementById("exp-kpi-top-amount").textContent = topCat ? fmt(topCat[1]) + " spent" : "No expenses yet";
- 
-    // Latest expense
-    if(expenses.length){
-      const latest = expenses[0]; // already sorted DESC
-      document.getElementById("exp-kpi-latest").textContent      = fmt(parseFloat(latest.amount));
-      document.getElementById("exp-kpi-latest-date").textContent = latest.expense_date;
-    } else {
-      document.getElementById("exp-kpi-latest").textContent      = "—";
-      document.getElementById("exp-kpi-latest-date").textContent = "No expenses yet";
-    }
- 
+
+    // This Month expense
+    const thisMonthStrExp = new Date().toISOString().slice(0,7);
+    const thisMonthExp = expenses.filter(r=>r.expense_date && r.expense_date.startsWith(thisMonthStrExp))
+                                 .reduce((s,r)=>s+parseFloat(r.amount),0);
+    document.getElementById("exp-kpi-latest").textContent      = fmt(thisMonthExp);
+    document.getElementById("exp-kpi-latest-date").textContent = thisMonthExp > 0
+      ? new Date().toLocaleString("default",{month:"long",year:"numeric"})
+      : "No expenses this month";
+
     if(!expenses.length){document.getElementById("expense-table-wrap").innerHTML=emptyState("No expenses recorded yet");return;}
     document.getElementById("expense-table-wrap").innerHTML=`<table><thead><tr><th>Date</th><th>Category</th><th>Title</th><th>Amount</th><th></th></tr></thead><tbody>
     ${expenses.map(r=>`<tr><td>${r.expense_date}</td><td><span class="badge badge-expense">Expense</span> ${r.category}</td><td style="color:var(--text2)">${r.title||"—"}</td><td class="amount-expense">−${fmt(r.amount)}</td><td><button onclick="deleteExpense(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem">🗑</button></td></tr>`).join("")}
     </tbody></table>`;
   }
- 
+
   function renderTransactions() {
     const fm=document.getElementById("filter-month").value, ft=document.getElementById("filter-type").value;
     let all=[...incomes.map(r=>({...r,_type:"income",_date:r.income_date})),...expenses.map(r=>({...r,_type:"expense",_date:r.expense_date}))].sort((a,b)=>b._date.localeCompare(a._date));
@@ -892,19 +904,19 @@
     ${all.map(r=>`<tr><td>${r._date}</td><td>${r._type==="income"?`<span class="badge badge-income">Income</span>`:`<span class="badge badge-expense">Expense</span>`}</td><td style="color:var(--text2)">${r._type==="income"?r.source:`${r.category}${r.title?" – "+r.title:""}`}</td><td class="${r._type==="income"?"amount-income":"amount-expense"}">${r._type==="income"?"+":"−"}${fmt(r.amount)}</td></tr>`).join("")}
     </tbody></table>`;
   }
- 
+
   let cmpBarInst, cmpPieInst, cmpPieInst2, cmpSavInst;
- 
+
   async function runCompare() {
     const v1 = document.getElementById("cmp-month1").value;
     const v2 = document.getElementById("cmp-month2").value;
     if(!v1 || !v2)   return showToast("Please select both months","error");
     if(v1 === v2)    return showToast("Please select two different months","error");
     if(!USER)        return showToast("Please log in first","error");
- 
+
     const [y1,m1] = v1.split("-").map(Number);
     const [y2,m2] = v2.split("-").map(Number);
- 
+
     try {
       // Fetch both months in parallel
       const [r1, r2] = await Promise.all([
@@ -913,16 +925,16 @@
       ]);
       const d1 = await r1.json();
       const d2 = await r2.json();
- 
+
       const label1 = new Date(y1,m1-1,1).toLocaleString("default",{month:"long",year:"numeric"});
       const label2 = new Date(y2,m2-1,1).toLocaleString("default",{month:"long",year:"numeric"});
- 
+
       // Labels
       document.getElementById("cmp-m1-label").textContent   = label1;
       document.getElementById("cmp-m2-label").textContent   = label2;
       document.getElementById("cmp-pie1-label").textContent = label1;
       document.getElementById("cmp-pie2-label").textContent = label2;
- 
+
       // KPI cards
       document.getElementById("cmp-m1-inc").textContent = fmt(d1.total_income);
       document.getElementById("cmp-m1-exp").textContent = fmt(d1.total_expense);
@@ -930,7 +942,7 @@
       document.getElementById("cmp-m2-inc").textContent = fmt(d2.total_income);
       document.getElementById("cmp-m2-exp").textContent = fmt(d2.total_expense);
       document.getElementById("cmp-m2-sav").textContent = fmt(d2.savings);
- 
+
       // Change indicators (Month2 - Month1)
       function diffEl(elId, val) {
         const el = document.getElementById(elId);
@@ -941,20 +953,20 @@
       diffEl("cmp-diff-inc", d2.total_income  - d1.total_income);
       diffEl("cmp-diff-exp", d2.total_expense - d1.total_expense);
       diffEl("cmp-diff-sav", d2.savings       - d1.savings);
- 
+
       // Show results, hide empty state
       document.getElementById("cmp-results-wrap").style.display = "block";
       document.getElementById("cmp-empty").style.display        = "none";
- 
+
       // Draw charts
       drawCmpCharts(d1, d2, label1, label2);
- 
+
     } catch { showToast("Server not reachable","error"); }
   }
- 
+
   function drawCmpCharts(d1, d2, label1, label2) {
     const COLORS = ["#6366f1","#10b981","#ef4444","#f59e0b","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316","#84cc16"];
- 
+
     // ── Bar: Income vs Expense for both months ──
     if(cmpBarInst) cmpBarInst.destroy();
     cmpBarInst = new Chart(document.getElementById("cmpBarChart").getContext("2d"),{
@@ -975,7 +987,7 @@
         }
       }
     });
- 
+
     // ── Bar: Savings comparison ──
     if(cmpSavInst) cmpSavInst.destroy();
     cmpSavInst = new Chart(document.getElementById("cmpSavChart").getContext("2d"),{
@@ -998,7 +1010,7 @@
         }
       }
     });
- 
+
     // ── Category breakdown for Month 1 ──
     const cats1 = {};
     expenses.filter(r=>{
@@ -1007,7 +1019,7 @@
              mo===parseInt(document.getElementById("cmp-month1").value.split("-")[1]);
     }).forEach(r=>{ cats1[r.category]=(cats1[r.category]||0)+parseFloat(r.amount); });
     const cl1=Object.keys(cats1), cd1=cl1.map(l=>cats1[l]);
- 
+
     if(cmpPieInst) cmpPieInst.destroy();
     cmpPieInst = new Chart(document.getElementById("cmpPieChart").getContext("2d"),{
       type:"pie",
@@ -1017,7 +1029,7 @@
       },
       options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"right", labels:{ font:{family:"DM Sans"}, boxWidth:12, padding:10 } } } }
     });
- 
+
     // ── Category breakdown for Month 2 ──
     const cats2 = {};
     expenses.filter(r=>{
@@ -1026,7 +1038,7 @@
              mo===parseInt(document.getElementById("cmp-month2").value.split("-")[1]);
     }).forEach(r=>{ cats2[r.category]=(cats2[r.category]||0)+parseFloat(r.amount); });
     const cl2=Object.keys(cats2), cd2=cl2.map(l=>cats2[l]);
- 
+
     if(cmpPieInst2) cmpPieInst2.destroy();
     cmpPieInst2 = new Chart(document.getElementById("cmpPieChart2").getContext("2d"),{
       type:"pie",
@@ -1037,15 +1049,14 @@
       options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:"right", labels:{ font:{family:"DM Sans"}, boxWidth:12, padding:10 } } } }
     });
   }
- 
+
   function renderCompareCharts() {
     // Reset to empty state when navigating to compare tab
     document.getElementById("cmp-results-wrap").style.display = "none";
     document.getElementById("cmp-empty").style.display        = "block";
   }
- 
+
   loadDashboard();
 </script>
 </body>
 </html>
- 
