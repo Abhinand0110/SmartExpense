@@ -13,7 +13,7 @@ Add income (like salary, freelance work, etc.)
 Add daily expenses
 <img width="2879" height="1438" alt="image" src="https://github.com/user-attachments/assets/3ff0c651-eb47-4b3c-8851-cf70a7174d4e" />
 View all their transactions
-<img width="2879" height="1434" alt="image" src="https://github.com/user-attachments/assets/58048858-90d4-472b-a8ca-82a374b26ff8" />
+<img width="2879" height="1438" alt="image" src="https://github.com/user-attachments/assets/da4c532f-4576-4030-82c3-6440845f6aa2" />
 See a dashboard with insights and charts<img width="2876" height="1442" alt="image" src="https://github.com/user-attachments/assets/3ee49d43-e1f7-41bd-ab04-29b4a4df54f8" />
 Compare spending between monthsv<img width="2879" height="1434" alt="image" src="https://github.com/user-attachments/assets/d6fe0ca9-04a1-40d1-b84a-8c3987ecd179" />
 Use an AI assistant to understand their finances better<img width="2879" height="1453" alt="image" src="https://github.com/user-attachments/assets/4bc54858-1b0b-4806-a849-81f68d4684a8" />
