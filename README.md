@@ -20,6 +20,9 @@ Use an AI assistant to understand their finances better<img width="2879" height=
 Give feedback about the system<img width="2879" height="1493" alt="image" src="https://github.com/user-attachments/assets/1b8eacd4-8afe-4e30-8318-419c0e58fe9b" />
 Main features
 User login and registration with validation
+<img width="2879" height="1454" alt="image" src="https://github.com/user-attachments/assets/d85ced8e-1590-4a62-a8e7-94b375e8cb70" />
+<img width="2879" height="1435" alt="image" src="https://github.com/user-attachments/assets/2b47c5a7-cc10-4729-aca3-34a976cb8bd6" />
+
 Simple and clean dashboard showing:
 total income
 total expenses
