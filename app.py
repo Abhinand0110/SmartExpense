@@ -15,7 +15,7 @@ def get_db():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="Abhiroot@123",
+        password="",
         database="smartexpense"
     )
 
@@ -573,7 +573,7 @@ def dashboard_data():
 import urllib.request
 import json as json_lib
 
-GROQ_API_KEY = "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"
+GROQ_API_KEY = ""
 
 @app.post("/ai-summary")
 def ai_summary():
